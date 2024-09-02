@@ -20,6 +20,15 @@ pub struct Flags {
     random: Option<String>,
 }
 
+impl Flags {
+    pub fn get(&self, field_name: &str) -> Option<&Option<String>> {
+        match field_name {
+            "apikey" => Some(&self.apikey),
+            _ => None,
+        }
+    }
+}
+
 pub fn cli_args() -> Flags {
     let flags = Flags::parse();
     return flags;
