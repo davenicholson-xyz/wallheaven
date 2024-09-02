@@ -4,9 +4,9 @@ mod parseargs;
 
 fn main() {
     let args = parseargs::cli_args();
-    dbg!(args);
-    //let conf = configuration::parse_config();
-    //println!("{:#?}", conf);
+    dbg!(&args);
+    let conf = configuration::parse_config(&args.config);
+    println!("{:#?}", conf);
 }
 
 //let url = "https://w.wallhaven.cc/full/vq/wallhaven-vq6ze3.jpg";
