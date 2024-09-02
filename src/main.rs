@@ -1,9 +1,12 @@
 mod configuration;
-mod userpaths;
+mod files;
+mod parseargs;
 
 fn main() {
-    let conf = configuration::parse_config();
-    println!("{:#?}", conf);
+    let args = parseargs::cli_args();
+    dbg!(args);
+    //let conf = configuration::parse_config();
+    //println!("{:#?}", conf);
 }
 
 //let url = "https://w.wallhaven.cc/full/vq/wallhaven-vq6ze3.jpg";

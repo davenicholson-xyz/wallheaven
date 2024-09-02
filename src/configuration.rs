@@ -1,4 +1,4 @@
-use crate::userpaths;
+use crate::files;
 use config::Config;
 use std::collections::HashMap;
 use std::path::Path;
@@ -14,18 +14,16 @@ pub fn parse_config() -> HashMap<String, String> {
     cfg.insert("ratios".to_string(), "landscape".to_string());
 
     let cfg_file = parse_config_file();
-    let cfg_args = parse_args();
 
     let mut settings = cfg.clone();
     settings.extend(cfg_file);
-    settings.extend(cfg_args);
     return settings;
 }
 
 fn parse_config_file() -> HashMap<String, String> {
-    if Path::new(&userpaths::config_file_string()).exists() {
+    if Path::new(&files::config_file_string()).exists() {
         let fileconfig = Config::builder()
-            .add_source(config::File::with_name(&userpaths::config_file_string()))
+            .add_source(config::File::with_name(&files::config_file_string()))
             .build()
             .unwrap();
 
@@ -34,9 +32,5 @@ fn parse_config_file() -> HashMap<String, String> {
             .unwrap();
     }
 
-    return HashMap::<String, String>::new();
-}
-
-fn parse_args() -> HashMap<String, String> {
     return HashMap::<String, String>::new();
 }
