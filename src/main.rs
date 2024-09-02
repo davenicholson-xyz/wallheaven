@@ -1,9 +1,9 @@
-mod configparse;
+mod configuration;
 mod userpaths;
 
 fn main() {
-    let settings = configparse::parse_config();
-    println!("{:#?}", settings);
+    let conf = configuration::parse_config();
+    println!("{:#?}", conf);
 }
 
 //let url = "https://w.wallhaven.cc/full/vq/wallhaven-vq6ze3.jpg";
