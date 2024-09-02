@@ -2,7 +2,7 @@ use clap::Parser;
 
 /// Wallpaper fetcher for wallhaven.cc
 #[derive(Parser, Debug)]
-pub struct CliParams {
+pub struct Flags {
     /// Config file to use
     #[arg(long)]
     pub config: Option<String>,
@@ -20,7 +20,7 @@ pub struct CliParams {
     random: Option<String>,
 }
 
-pub fn cli_args() -> CliParams {
-    let cli = CliParams::parse();
-    return cli;
+pub fn cli_args() -> Flags {
+    let flags = Flags::parse();
+    return flags;
 }

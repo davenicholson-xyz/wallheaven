@@ -1,9 +1,10 @@
 use crate::files;
+use crate::parseargs::Flags;
 use config::Config;
 use std::collections::HashMap;
 use std::path::Path;
 
-pub fn parse_config(args_config: &Option<String>) -> HashMap<String, String> {
+pub fn parse_config(flags: &Flags) -> HashMap<String, String> {
     let mut cfg: HashMap<String, String> = HashMap::new();
 
     // Sensible defaults
@@ -14,9 +15,8 @@ pub fn parse_config(args_config: &Option<String>) -> HashMap<String, String> {
     cfg.insert("ratios".to_string(), "landscape".to_string());
 
     let default_config_path = files::config_file_string();
-    let cfg_path = args_config
-        .as_deref()
-        .unwrap_or(default_config_path.as_ref());
+    let flags_config = flags.config.clone();
+    let cfg_path = flags_config.unwrap_or(default_config_path);
     let cfg_file = parse_config_file(cfg_path.to_string());
 
     let mut settings = cfg.clone();

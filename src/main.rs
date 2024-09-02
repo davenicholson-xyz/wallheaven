@@ -4,9 +4,9 @@ mod parseargs;
 mod wallhaven;
 
 fn main() {
-    let args = parseargs::cli_args();
-    dbg!(&args);
-    let conf = configuration::parse_config(&args.config);
+    let flags = parseargs::cli_args();
+    dbg!(&flags);
+    let conf = configuration::parse_config(&flags);
     println!("{:#?}", &conf);
     let wid = wallhaven::fetch_collection_id(&conf);
     println!("{:?}", wid);
