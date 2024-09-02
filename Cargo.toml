@@ -1,0 +1,11 @@
+[package]
+name = "wallheaven"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.5.16", features = ["derive"] }
+dirs = "5.0.1"
+reqwest = { version = "0.12.7", features = ["blocking"] }
+url = "2.5.2"
+config = "0.14.0"
