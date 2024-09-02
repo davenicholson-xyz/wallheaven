@@ -1,6 +1,9 @@
-use crate::parseargs::Args;
+use std::collections::HashMap;
 
-pub fn fetch_collection_id(args: &Args) -> String {
-    let url = format!("https://wallhaven.cc");
-    return "".to_string();
+const API_URL: &str = "https://wallhaven.cc/api/v1";
+
+pub fn fetch_collection_id(conf: &HashMap<String, String>) -> String {
+    let apikey = conf.get("apikey").expect("An API key is required");
+    let url = format!("{}/collections?apikey={}", API_URL, apikey);
+    return url;
 }

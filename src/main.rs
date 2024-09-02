@@ -7,8 +7,8 @@ fn main() {
     let args = parseargs::cli_args();
     dbg!(&args);
     let conf = configuration::parse_config(&args.config);
-    println!("{:#?}", conf);
-    let wid = wallhaven::fetch_collection_id(&args);
+    println!("{:#?}", &conf);
+    let wid = wallhaven::fetch_collection_id(&conf);
     println!("{:?}", wid);
 }
 

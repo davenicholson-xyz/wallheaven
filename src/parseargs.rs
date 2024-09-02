@@ -2,10 +2,14 @@ use clap::Parser;
 
 /// Wallpaper fetcher for wallhaven.cc
 #[derive(Parser, Debug)]
-pub struct Args {
+pub struct CliParams {
     /// Config file to use
     #[arg(long)]
     pub config: Option<String>,
+
+    /// API key
+    #[arg(long)]
+    pub apikey: Option<String>,
 
     /// Specify the collection name to fetch wallpaper from (requires username and apikey)
     #[arg(short, long)]
@@ -16,7 +20,7 @@ pub struct Args {
     random: Option<String>,
 }
 
-pub fn cli_args() -> Args {
-    let cli = Args::parse();
+pub fn cli_args() -> CliParams {
+    let cli = CliParams::parse();
     return cli;
 }
