@@ -17,7 +17,6 @@ pub fn parse_config(args_config: &Option<String>) -> HashMap<String, String> {
     let cfg_path = args_config
         .as_deref()
         .unwrap_or(default_config_path.as_ref());
-    println!("{}", &cfg_path);
     let cfg_file = parse_config_file(cfg_path.to_string());
 
     let mut settings = cfg.clone();
