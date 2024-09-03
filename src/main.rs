@@ -38,6 +38,9 @@ fn main() {
     }
 
     if flags.random.is_some() {
+        let query = flags.random.unwrap();
+        let wps = wallhaven::fetch_random(&query);
+        let _ = files::set_wallpaper(&wps[0]);
         return;
     }
 }

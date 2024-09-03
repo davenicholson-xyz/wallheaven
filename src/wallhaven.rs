@@ -1,3 +1,4 @@
+use crate::files::vec_to_cache;
 use crate::parseargs;
 use crate::{files, SETTINGS};
 use rand::seq::SliceRandom;
@@ -105,6 +106,42 @@ pub fn choose_from_collection(label: &str) -> String {
 
     let random_wallpaper = wallpapers.choose(&mut rand::thread_rng());
     random_wallpaper.unwrap().to_string()
+}
+
+pub fn fetch_random(query: &str) -> Vec<String> {
+    let settings = SETTINGS.lock().unwrap();
+
+    let apikey = settings.get("apikey").unwrap();
+    let categories = settings.get("categories").unwrap();
+    let purity = settings.get("purity").unwrap();
+
+    let mut wallpapers: Vec<String> = Vec::new();
+
+    //let seed = randomseed
+    let url = format!(
+        "{}/search?q={}&categories={}&purity={}&order=random&apikey={}",
+        API_URL, query, categories, purity, apikey
+    );
+
+    let wps = fetch_query_page(url.as_ref(), 1).unwrap();
+    wallpapers.extend(wps);
+
+    let _ = vec_to_cache(&wallpapers, ".random");
+
+    return wallpapers;
+}
+
+fn fetch_query_page(url: &str, page: u32) -> Result<Vec<String>, reqwest::Error> {
+    let page_url = format!("{}&page={}", url, page.to_string());
+    let mut wallpapers: Vec<String> = Vec::new();
+    let response = fetch_json_string(&page_url);
+    let page_data = serde_json::from_str::<PageData>(response.unwrap().as_ref()).unwrap();
+
+    for wallpaper in page_data.data {
+        wallpapers.push(wallpaper.path);
+    }
+
+    Ok(wallpapers)
 }
 
 pub fn fetch_collection(id: u32) -> Vec<String> {
