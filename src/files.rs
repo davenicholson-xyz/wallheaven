@@ -1,7 +1,8 @@
-use dirs;
+use dirs::{self, cache_dir};
 use reqwest::blocking::get;
-use std::fs::File;
+use std::fs::{self, File};
 use std::io::copy;
+use std::task::Wake;
 use std::{env, path::PathBuf};
 use url::Url;
 
@@ -55,4 +56,18 @@ pub fn download_image(image_url: &str) {
     let mut file = File::create(filename).expect("Failed to create file");
     copy(&mut response, &mut file).expect("Failed to save the file");
     println!("Image downloaded successfully...");
+}
+
+pub fn check_or_create_dir(path: PathBuf) {
+    if !(path.exists()) {
+        _ = fs::create_dir_all(path);
+    }
+}
+
+pub fn vec_to_cache(v: Vec<String>, filename: &str) {
+    check_or_create_dir(cache_dir_path());
+    let mut fname = cache_dir_path().clone();
+    fname.push(filename);
+
+    _ = std::fs::write(fname, "arses");
 }

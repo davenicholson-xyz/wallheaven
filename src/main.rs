@@ -9,6 +9,8 @@ extern crate lazy_static;
 use std::collections::HashMap;
 use std::sync::Mutex;
 
+use files::vec_to_file;
+
 lazy_static! {
     static ref SETTINGS: Mutex<HashMap<String, String>> = {
         #[allow(unused_mut)]
@@ -21,7 +23,8 @@ fn main() {
     let flags = parseargs::cli_args();
     configuration::parse_config(&flags);
     let col_id = wallhaven::fetch_collection_id();
-    let _ = wallhaven::fetch_collection_info(col_id);
+    //println!("{}", col_id);
+    let _ = wallhaven::fetch_collection(col_id);
 }
 
 //let url = "https://w.wallhaven.cc/full/vq/wallhaven-vq6ze3.jpg";
