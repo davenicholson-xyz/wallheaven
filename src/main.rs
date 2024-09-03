@@ -36,4 +36,8 @@ fn main() {
         let _ = files::set_wallpaper(&chosen);
         return;
     }
+
+    if flags.random.is_some() {
+        return;
+    }
 }

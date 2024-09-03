@@ -28,11 +28,11 @@ pub struct Flags {
     pub from_cache: bool,
 
     /// Returns the path to the current set wallpaper
-    #[arg(long = "file")]
+    #[arg(short, long = "file")]
     pub file: bool,
 
     /// Returns the link to the current set wallpaper on wallhaven.cc
-    #[arg(long = "url")]
+    #[arg(short, long = "url")]
     pub url: bool,
 }
 
