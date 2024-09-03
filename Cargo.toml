@@ -6,7 +6,9 @@ edition = "2021"
 [dependencies]
 clap = { version = "4.5.16", features = ["derive"] }
 dirs = "5.0.1"
-reqwest = { version = "0.12.7", features = ["blocking"] }
+reqwest = { version = "0.12.7", features = ["blocking", "json"] }
 url = "2.5.2"
 config = "0.14.0"
 field_accessor = "0.5.2"
+serde = { version = "1.0.209", features = ["derive"] }
+tokio = { version = "1.40.0", features = ["full"] }

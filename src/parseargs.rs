@@ -12,18 +12,24 @@ pub struct Flags {
     pub apikey: Option<String>,
 
     /// Specify the collection name to fetch wallpaper from (requires username and apikey)
-    #[arg(short, long)]
+    #[arg(short, long, conflicts_with = "random")]
     collection: Option<String>,
 
     /// Query to search for random wallpaper
     #[arg(short, long)]
     random: Option<String>,
+
+    /// Purity (sfw|sketchy|nsfw) or bindary flags
+    #[arg(short, long)]
+    purity: Option<String>,
 }
 
 impl Flags {
     pub fn get(&self, field_name: &str) -> Option<&Option<String>> {
         match field_name {
             "apikey" => Some(&self.apikey),
+            "collection" => Some(&self.collection),
+            "random" => Some(&self.random),
             _ => None,
         }
     }
