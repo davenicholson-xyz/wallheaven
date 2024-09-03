@@ -62,7 +62,7 @@ pub fn check_or_create_dir(path: PathBuf) {
     }
 }
 
-pub fn vec_to_cache(v: Vec<String>, filename: &str) -> io::Result<()> {
+pub fn vec_to_cache(v: &Vec<String>, filename: &str) -> io::Result<()> {
     check_or_create_dir(cache_dir_path());
     let mut fname = cache_dir_path().clone();
     fname.push(filename);

@@ -1,4 +1,5 @@
 use crate::{files, SETTINGS};
+use rand::seq::SliceRandom;
 use reqwest::Error;
 use serde::Deserialize;
 use serde_json;
@@ -76,10 +77,13 @@ pub fn fetch_collection_id() -> u32 {
 fn fetch_collection_data(url: &str) -> Result<CollectionsData, reqwest::Error> {
     let response = fetch_json_string(url);
     let collections_data = serde_json::from_str::<CollectionsData>(response.unwrap().as_ref());
+    if collections_data.is_err() {
+        panic!("{}", "Error with API. Check username and apikey");
+    }
     Ok(collections_data.unwrap())
 }
 
-pub fn fetch_collection(id: u32) -> Result<(), reqwest::Error> {
+pub fn fetch_collection(id: u32) -> String {
     let settings = SETTINGS.lock().unwrap();
 
     let username = settings.get("username").expect("A username is required");
@@ -107,9 +111,10 @@ pub fn fetch_collection(id: u32) -> Result<(), reqwest::Error> {
     }
 
     let label = settings.get("collection").expect("Missing collection name");
-    files::vec_to_cache(wallpapers, label);
+    _ = files::vec_to_cache(&wallpapers, label);
 
-    Ok(())
+    let random_wallpaper = wallpapers.choose(&mut rand::thread_rng());
+    random_wallpaper.unwrap().to_string()
 }
 
 fn fetch_collection_page(
