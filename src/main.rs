@@ -19,6 +19,18 @@ fn main() {
     let flags = parseargs::cli_args();
     configuration::parse_config(&flags);
 
+    if flags.file {
+        let curr = files::cache_to_vec(".current");
+        println!("{}", &curr[0].to_string());
+        return;
+    }
+
+    if flags.url {
+        let curr = files::cache_to_vec(".current");
+        println!("{}", &curr[1].to_string());
+        return;
+    }
+
     if flags.collection.is_some() {
         let chosen = wallhaven::choose_from_collection(flags.collection.unwrap().as_ref());
         let _ = files::set_wallpaper(&chosen);

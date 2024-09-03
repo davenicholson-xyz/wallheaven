@@ -1,6 +1,7 @@
 use reqwest::blocking::get;
 use std::fs::{self, File};
 use std::io::{self, copy, Write};
+use std::path::Path;
 use std::{env, path::PathBuf};
 use url::Url;
 
@@ -59,10 +60,10 @@ pub fn check_or_create_dir(path: PathBuf) {
 
 pub fn vec_to_cache(v: &Vec<String>, filename: &str) -> io::Result<()> {
     check_or_create_dir(cache_dir_path());
-    let mut fname = cache_dir_path().clone();
-    fname.push(filename);
+    let mut cache = cache_dir_path().clone();
+    cache.push(filename);
 
-    let mut file = File::create(fname)?;
+    let mut file = File::create(cache)?;
     for line in v {
         writeln!(file, "{}", line)?
     }
@@ -80,6 +81,13 @@ pub fn cache_to_vec(filename: &str) -> Vec<String> {
     return v;
 }
 
+pub fn get_wpid(image_url: &str) -> String {
+    let filename = filename_from_url(image_url);
+    let path = Path::new(&filename).file_stem().unwrap();
+    let wpid = path.to_os_string().into_string().unwrap();
+    return wpid;
+}
+
 pub fn set_wallpaper(image_url: &str) -> io::Result<()> {
     let filename = filename_from_url(image_url);
     let mut fname = cache_dir_path().clone();
@@ -93,7 +101,8 @@ pub fn set_wallpaper(image_url: &str) -> io::Result<()> {
     current_file.push(".current");
     let mut current = File::create(current_file)?;
     writeln!(current, "{}", fname.display().to_string())?;
-    writeln!(current, "{}", image_url.to_string())?;
+    let wpid = get_wpid(image_url);
+    writeln!(current, "https://wallhaven.cc/w/{}", wpid)?;
 
     println!("{}", fname.display().to_string());
     Ok(())

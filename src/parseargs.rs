@@ -23,9 +23,17 @@ pub struct Flags {
     #[arg(short, long)]
     pub purity: Option<String>,
 
-    // Update collection from last search to minimise api calls
+    /// Update collection from last search to minimise api calls
     #[arg(long = "from-cache")]
     pub from_cache: bool,
+
+    /// Returns the path to the current set wallpaper
+    #[arg(long = "file")]
+    pub file: bool,
+
+    /// Returns the link to the current set wallpaper on wallhaven.cc
+    #[arg(long = "url")]
+    pub url: bool,
 }
 
 impl Flags {

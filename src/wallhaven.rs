@@ -1,5 +1,3 @@
-use std::fs::read_to_string;
-
 use crate::parseargs;
 use crate::{files, SETTINGS};
 use rand::seq::SliceRandom;
