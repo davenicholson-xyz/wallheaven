@@ -1,3 +1,4 @@
+use crate::SETTINGS;
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -25,9 +26,10 @@ impl CollectionData {
     }
 }
 
-pub fn fetch_collection_id(conf: &HashMap<String, String>) -> u32 {
-    let apikey = conf.get("apikey").expect("An API key is required");
-    let collection_label = conf
+pub fn fetch_collection_id() -> u32 {
+    let settings = SETTINGS.lock().unwrap();
+    let apikey = settings.get("apikey").expect("An API key is required");
+    let collection_label = settings
         .get("collection")
         .expect("A collection name is required");
     let colletions = format!("{}/collections?apikey={}", API_URL, apikey);
@@ -47,8 +49,16 @@ async fn fetch_collection_data(url: String) -> Result<CollectionData, reqwest::E
 }
 
 #[tokio::main]
-async fn fetch_collection_info(id: u32) -> Result<(), reqwest::Error> {
-    let url = format!("{}", API_URL);
+pub async fn fetch_collection_info(id: u32) -> Result<(), reqwest::Error> {
+    let settings = SETTINGS.lock().unwrap();
+
+    let username = settings.get("username").expect("A username is required");
+    let apikey = settings.get("apikey").expect("An API key is required");
+
+    let url = format!(
+        "{}/collections/{}/{}?apikey={}",
+        API_URL, username, id, apikey
+    );
     let collection_info = reqwest::Client::new().get(url).send().await?.text().await?;
     println!("{:#?}", collection_info);
     Ok(())

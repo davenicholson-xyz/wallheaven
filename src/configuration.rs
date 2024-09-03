@@ -1,18 +1,16 @@
-use crate::files;
 use crate::parseargs::Flags;
+use crate::{files, SETTINGS};
 use config::Config;
 use std::collections::HashMap;
 use std::path::Path;
 
-pub fn parse_config(flags: &Flags) -> HashMap<String, String> {
-    let mut cfg: HashMap<String, String> = HashMap::new();
-
-    // Sensible defaults
-    cfg.insert("purity".to_string(), "100".to_string());
-    cfg.insert("categories".to_string(), "111".to_string());
-    cfg.insert("pages".to_string(), "5".to_string());
-    cfg.insert("toprange".to_string(), "1M".to_string());
-    cfg.insert("ratios".to_string(), "landscape".to_string());
+pub fn parse_config(flags: &Flags) {
+    let mut settings = SETTINGS.lock().unwrap();
+    settings.insert("purity".to_string(), "100".to_string());
+    settings.insert("categories".to_string(), "111".to_string());
+    settings.insert("pages".to_string(), "5".to_string());
+    settings.insert("toprange".to_string(), "1M".to_string());
+    settings.insert("ratios".to_string(), "landscape".to_string());
 
     let default_config_path = files::config_file_string();
     let flags_config = flags.config.clone();
@@ -22,11 +20,8 @@ pub fn parse_config(flags: &Flags) -> HashMap<String, String> {
     let cfg_file = parse_config_file(cfg_path.to_string());
     let cfg_flags = parse_flags_config(flags);
 
-    let mut settings = cfg.clone();
     settings.extend(cfg_file);
     settings.extend(cfg_flags);
-
-    return settings;
 }
 
 fn parse_flags_config(flags: &Flags) -> HashMap<String, String> {

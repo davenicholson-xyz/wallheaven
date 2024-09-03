@@ -12,3 +12,4 @@ config = "0.14.0"
 field_accessor = "0.5.2"
 serde = { version = "1.0.209", features = ["derive"] }
 tokio = { version = "1.40.0", features = ["full"] }
+lazy_static = "1.5.0"

@@ -1692,6 +1692,7 @@ dependencies = [
  "config",
  "dirs",
  "field_accessor",
+ "lazy_static",
  "reqwest",
  "serde",
  "tokio",
