@@ -84,8 +84,9 @@ pub fn cache_to_vec(filename: &str) -> Vec<String> {
 pub fn get_wpid(image_url: &str) -> String {
     let filename = filename_from_url(image_url);
     let path = Path::new(&filename).file_stem().unwrap();
-    let wpid = path.to_os_string().into_string().unwrap();
-    return wpid;
+    let wpname = path.to_os_string().into_string().unwrap();
+    let wpid = wpname.split("-").collect::<Vec<&str>>();
+    return wpid[1].to_string();
 }
 
 pub fn set_wallpaper(image_url: &str) -> io::Result<()> {
