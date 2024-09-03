@@ -2,6 +2,7 @@ use crate::files::vec_to_cache;
 use crate::parseargs;
 use crate::{files, SETTINGS};
 use rand::seq::SliceRandom;
+use rand::Rng;
 use reqwest::Error;
 use serde::Deserialize;
 use serde_json;
@@ -117,10 +118,12 @@ pub fn fetch_random(query: &str) -> Vec<String> {
 
     let mut wallpapers: Vec<String> = Vec::new();
 
-    //let seed = randomseed
+    let mut rng = rand::thread_rng();
+    let seed: u32 = rng.gen_range(0..1000000);
+
     let url = format!(
-        "{}/search?q={}&categories={}&purity={}&order=random&apikey={}",
-        API_URL, query, categories, purity, apikey
+        "{}/search?q={}&categories={}&purity={}&seed={}ratios=landscape&sorting=random&apikey={}",
+        API_URL, query, categories, purity, seed, apikey
     );
 
     let wps = fetch_query_page(url.as_ref(), 1).unwrap();
