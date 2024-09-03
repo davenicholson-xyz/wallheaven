@@ -18,9 +18,14 @@ lazy_static! {
 fn main() {
     let flags = parseargs::cli_args();
     configuration::parse_config(&flags);
-    let col_id = wallhaven::fetch_collection_id();
-    let chosen = wallhaven::fetch_collection(col_id);
-    println!("{}", chosen);
+
+    if flags.get("collection").is_some() {
+        let col_id = wallhaven::fetch_collection_id();
+        let chosen = wallhaven::fetch_collection(col_id);
+        files::set_wallpaper(&chosen);
+        //files::download_image(chosen.as_ref());
+        //println!("{}", chosen);
+    }
 }
 
 //let url = "https://w.wallhaven.cc/full/vq/wallhaven-vq6ze3.jpg";

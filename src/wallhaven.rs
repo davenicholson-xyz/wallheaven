@@ -110,11 +110,15 @@ pub fn fetch_collection(id: u32) -> String {
         }
     }
 
-    let label = settings.get("collection").expect("Missing collection name");
-    _ = files::vec_to_cache(&wallpapers, label);
+    if wallpapers.len() > 0 {
+        let label = settings.get("collection").expect("Missing collection name");
+        _ = files::vec_to_cache(&wallpapers, label);
 
-    let random_wallpaper = wallpapers.choose(&mut rand::thread_rng());
-    random_wallpaper.unwrap().to_string()
+        let random_wallpaper = wallpapers.choose(&mut rand::thread_rng());
+        random_wallpaper.unwrap().to_string()
+    } else {
+        panic!("{}", "No images returned from collection")
+    }
 }
 
 fn fetch_collection_page(
