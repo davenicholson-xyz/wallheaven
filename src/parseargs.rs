@@ -13,15 +13,19 @@ pub struct Flags {
 
     /// Specify the collection name to fetch wallpaper from (requires username and apikey)
     #[arg(short, long, conflicts_with = "random")]
-    collection: Option<String>,
+    pub collection: Option<String>,
 
     /// Query to search for random wallpaper
     #[arg(short, long)]
-    random: Option<String>,
+    pub random: Option<String>,
 
     /// Purity (sfw|sketchy|nsfw) or bindary flags
     #[arg(short, long)]
-    purity: Option<String>,
+    pub purity: Option<String>,
+
+    // Update collection from last search to minimise api calls
+    #[arg(long = "from-cache")]
+    pub from_cache: bool,
 }
 
 impl Flags {

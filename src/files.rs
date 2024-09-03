@@ -69,7 +69,18 @@ pub fn vec_to_cache(v: &Vec<String>, filename: &str) -> io::Result<()> {
     Ok(())
 }
 
-pub fn set_wallpaper(image_url: &str) {
+pub fn cache_to_vec(filename: &str) -> Vec<String> {
+    let mut v: Vec<String> = Vec::new();
+    let mut cache = cache_dir_path().clone();
+    cache.push(filename);
+
+    for line in std::fs::read_to_string(cache).unwrap().lines() {
+        v.push(line.to_string());
+    }
+    return v;
+}
+
+pub fn set_wallpaper(image_url: &str) -> io::Result<()> {
     let filename = filename_from_url(image_url);
     let mut fname = cache_dir_path().clone();
     fname.push(filename);
@@ -78,5 +89,12 @@ pub fn set_wallpaper(image_url: &str) {
         download_image(image_url, &fname);
     }
 
+    let mut current_file = cache_dir_path().clone();
+    current_file.push(".current");
+    let mut current = File::create(current_file)?;
+    writeln!(current, "{}", fname.display().to_string())?;
+    writeln!(current, "{}", image_url.to_string())?;
+
     println!("{}", fname.display().to_string());
+    Ok(())
 }

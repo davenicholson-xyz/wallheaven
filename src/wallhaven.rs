@@ -1,3 +1,6 @@
+use std::fs::read_to_string;
+
+use crate::parseargs;
 use crate::{files, SETTINGS};
 use rand::seq::SliceRandom;
 use reqwest::Error;
@@ -59,17 +62,17 @@ pub fn fetch_json_string(url: &str) -> Result<String, Error> {
     Ok(response)
 }
 
-pub fn fetch_collection_id() -> u32 {
+pub fn fetch_collection_id(label: &str) -> u32 {
     let settings = SETTINGS.lock().unwrap();
     let apikey = settings.get("apikey").expect("An API key is required");
-    let collection_label = settings
-        .get("collection")
-        .expect("A collection name is required");
+    //let collection_label = settings
+    //    .get("collection")
+    //    .expect("A collection name is required");
     let colletions = format!("{}/collections?apikey={}", API_URL, apikey);
     let collections_data =
         fetch_collection_data(&colletions).expect("Error fetching users collection info");
     let collection_id = collections_data
-        .find_collection_id(&collection_label)
+        .find_collection_id(&label)
         .expect("Collection not available");
     return collection_id;
 }
@@ -83,7 +86,30 @@ fn fetch_collection_data(url: &str) -> Result<CollectionsData, reqwest::Error> {
     Ok(collections_data.unwrap())
 }
 
-pub fn fetch_collection(id: u32) -> String {
+pub fn choose_from_collection(label: &str) -> String {
+    let mut wallpapers: Vec<String> = Vec::new();
+    let flags = parseargs::cli_args();
+
+    let mut collection_cache = files::cache_dir_path().clone();
+    collection_cache.push(label);
+
+    if flags.from_cache && collection_cache.exists() {
+        let v = files::cache_to_vec(label);
+        wallpapers.extend(v);
+    } else {
+        let collection_id = fetch_collection_id(&label);
+        let wp_list = fetch_collection(collection_id);
+        wallpapers.extend(wp_list);
+        if wallpapers.len() > 0 {
+            _ = files::vec_to_cache(&wallpapers, label);
+        }
+    }
+
+    let random_wallpaper = wallpapers.choose(&mut rand::thread_rng());
+    random_wallpaper.unwrap().to_string()
+}
+
+pub fn fetch_collection(id: u32) -> Vec<String> {
     let settings = SETTINGS.lock().unwrap();
 
     let username = settings.get("username").expect("A username is required");
@@ -109,16 +135,7 @@ pub fn fetch_collection(id: u32) -> String {
             wallpapers.extend(wps);
         }
     }
-
-    if wallpapers.len() > 0 {
-        let label = settings.get("collection").expect("Missing collection name");
-        _ = files::vec_to_cache(&wallpapers, label);
-
-        let random_wallpaper = wallpapers.choose(&mut rand::thread_rng());
-        random_wallpaper.unwrap().to_string()
-    } else {
-        panic!("{}", "No images returned from collection")
-    }
+    return wallpapers;
 }
 
 fn fetch_collection_page(
