@@ -5,12 +5,8 @@ mod wallhaven;
 
 #[macro_use]
 extern crate lazy_static;
-
 use std::collections::HashMap;
 use std::sync::Mutex;
-
-use files::vec_to_file;
-
 lazy_static! {
     static ref SETTINGS: Mutex<HashMap<String, String>> = {
         #[allow(unused_mut)]

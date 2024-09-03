@@ -1,8 +1,8 @@
 use dirs::{self, cache_dir};
 use reqwest::blocking::get;
-use std::fs::{self, File};
+use std::error::Error;
+use std::fs::{self, File, ReadDir};
 use std::io::copy;
-use std::task::Wake;
 use std::{env, path::PathBuf};
 use url::Url;
 
@@ -69,5 +69,5 @@ pub fn vec_to_cache(v: Vec<String>, filename: &str) {
     let mut fname = cache_dir_path().clone();
     fname.push(filename);
 
-    _ = std::fs::write(fname, "arses");
+    //_ = std::fs::write(fname, "arses");
 }
