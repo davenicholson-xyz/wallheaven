@@ -1,6 +1,7 @@
 mod configuration;
 mod files;
 mod parseargs;
+mod utils;
 mod wallhaven;
 
 #[macro_use]
@@ -15,9 +16,21 @@ lazy_static! {
     };
 }
 
+enum Sorting {
+    Random,
+    Toplist,
+    Hot,
+}
+
+// TODO: Error handling globally
 fn main() {
     let flags = parseargs::cli_args();
     configuration::parse_config(&flags);
+
+    if flags.clear {
+        // TODO: Clear cache files
+        return;
+    }
 
     if flags.file {
         let curr = files::cache_to_vec(".current");
@@ -37,10 +50,16 @@ fn main() {
         return;
     }
 
+    if flags.toplist {
+        let wps = wallhaven::fetch_query(Sorting::Toplist);
+        dbg!(wps);
+        return;
+    }
+
     if flags.random.is_some() {
         let query = flags.random.unwrap();
-        let wps = wallhaven::fetch_random(&query);
-        let _ = files::set_wallpaper(&wps[0]);
+        let chosen = wallhaven::fetch_random(&query);
+        let _ = files::set_wallpaper(&chosen);
         return;
     }
 }

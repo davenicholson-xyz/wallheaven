@@ -1,47 +1,42 @@
 use crate::files::vec_to_cache;
-use crate::parseargs;
-use crate::{files, SETTINGS};
+use crate::utils::generate_seed;
+use crate::{files, Sorting, SETTINGS};
+use crate::{parseargs, utils};
 use rand::seq::SliceRandom;
-use rand::Rng;
 use reqwest::Error;
 use serde::Deserialize;
 use serde_json;
 
 const API_URL: &str = "https://wallhaven.cc/api/v1";
 
-#[allow(dead_code)]
+// TODO: Move struct to seperate file
+#[derive(Debug, Deserialize)]
+struct Wallpaper {
+    path: String,
+}
+
 #[derive(Debug, Deserialize)]
 struct Collection {
     id: u32,
     label: String,
 }
 
-#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 struct CollectionsData {
     data: Vec<Collection>,
 }
 
-#[allow(dead_code)]
-#[derive(Debug, Deserialize)]
-struct Wallpaper {
-    path: String,
-}
-
-#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 struct CollectonMeta {
     last_page: u32,
 }
 
-#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 struct CollectionData {
     meta: CollectonMeta,
     data: Vec<Wallpaper>,
 }
 
-#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 struct PageData {
     data: Vec<Wallpaper>,
@@ -65,9 +60,6 @@ pub fn fetch_json_string(url: &str) -> Result<String, Error> {
 pub fn fetch_collection_id(label: &str) -> u32 {
     let settings = SETTINGS.lock().unwrap();
     let apikey = settings.get("apikey").expect("An API key is required");
-    //let collection_label = settings
-    //    .get("collection")
-    //    .expect("A collection name is required");
     let colletions = format!("{}/collections?apikey={}", API_URL, apikey);
     let collections_data =
         fetch_collection_data(&colletions).expect("Error fetching users collection info");
@@ -109,7 +101,39 @@ pub fn choose_from_collection(label: &str) -> String {
     random_wallpaper.unwrap().to_string()
 }
 
-pub fn fetch_random(query: &str) -> Vec<String> {
+pub fn fetch_query(sort: Sorting) -> Vec<String> {
+    let settings = SETTINGS.lock().unwrap();
+    let apikey = settings.get("apikey").unwrap();
+    let categories = settings.get("categories").unwrap();
+    let purity = settings.get("purity").unwrap();
+
+    let seed = utils::generate_seed();
+
+    let mut wallpapers: Vec<String> = Vec::new();
+
+    let sorting = match sort {
+        Sorting::Toplist => "toplist",
+        Sorting::Hot => "hot",
+        Sorting::Random => "random",
+    };
+
+    let url = format!(
+        "{}/search?categories={}&purity={}&seed={}&ratios=landscape&sorting={}&apikey={}",
+        API_URL, categories, purity, seed, sorting, apikey
+    );
+
+    dbg!(&url);
+
+    let wps = fetch_query_page(url.as_ref(), 1).unwrap();
+    wallpapers.extend(wps);
+
+    let _ = vec_to_cache(&wallpapers, ".query");
+
+    return wallpapers;
+}
+
+// TODO: Move random/hot/toplist search to one query methood - just change sorting order in api
+pub fn fetch_random(query: &str) -> String {
     let settings = SETTINGS.lock().unwrap();
 
     let apikey = settings.get("apikey").unwrap();
@@ -118,8 +142,7 @@ pub fn fetch_random(query: &str) -> Vec<String> {
 
     let mut wallpapers: Vec<String> = Vec::new();
 
-    let mut rng = rand::thread_rng();
-    let seed: u32 = rng.gen_range(0..1000000);
+    let seed = generate_seed();
 
     let url = format!(
         "{}/search?q={}&categories={}&purity={}&seed={}&ratios=landscape&sorting=random&apikey={}",
@@ -131,7 +154,8 @@ pub fn fetch_random(query: &str) -> Vec<String> {
 
     let _ = vec_to_cache(&wallpapers, ".random");
 
-    return wallpapers;
+    let random_wallpaper = wallpapers.choose(&mut rand::thread_rng());
+    random_wallpaper.unwrap().to_string()
 }
 
 fn fetch_query_page(url: &str, page: u32) -> Result<Vec<String>, reqwest::Error> {

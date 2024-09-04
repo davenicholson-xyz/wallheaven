@@ -19,6 +19,10 @@ pub struct Flags {
     #[arg(short, long)]
     pub random: Option<String>,
 
+    /// Query to search for random wallpaper
+    #[arg(short, long)]
+    pub toplist: bool,
+
     /// Purity (sfw|sketchy|nsfw) or binary flags
     #[arg(short, long)]
     pub purity: Option<String>,
@@ -38,6 +42,10 @@ pub struct Flags {
     /// Returns the link to the current set wallpaper on wallhaven.cc
     #[arg(short, long = "url")]
     pub url: bool,
+
+    /// Deletes wallpaper cache files
+    #[arg(long)]
+    pub clear: bool,
 }
 
 impl Flags {
