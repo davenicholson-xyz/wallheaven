@@ -1,223 +1,39 @@
-use crate::files::vec_to_cache;
-use crate::utils::generate_seed;
-use crate::{files, Sorting, SETTINGS};
-use crate::{parseargs, utils};
-use rand::seq::SliceRandom;
-use reqwest::Error;
-use serde::Deserialize;
-use serde_json;
+use crate::enums::Sorting;
+use crate::errors::CustomError;
+use crate::{utils, SETTINGS};
 
-const API_URL: &str = "https://wallhaven.cc/api/v1";
+use url_builder::URLBuilder;
+use urlencoding::encode;
 
-// TODO: Move struct to seperate file
-#[derive(Debug, Deserialize)]
-struct Wallpaper {
-    path: String,
-}
+const API_URL: &str = "wallhaven.cc/api/v1";
 
-#[derive(Debug, Deserialize)]
-struct Collection {
-    id: u32,
-    label: String,
-}
-
-#[derive(Debug, Deserialize)]
-struct CollectionsData {
-    data: Vec<Collection>,
-}
-
-#[derive(Debug, Deserialize)]
-struct CollectonMeta {
-    last_page: u32,
-}
-
-#[derive(Debug, Deserialize)]
-struct CollectionData {
-    meta: CollectonMeta,
-    data: Vec<Wallpaper>,
-}
-
-#[derive(Debug, Deserialize)]
-struct PageData {
-    data: Vec<Wallpaper>,
-}
-
-impl CollectionsData {
-    fn find_collection_id(&self, search: &str) -> Option<u32> {
-        self.data
-            .iter()
-            .find(|&collection| collection.label == search)
-            .map(|collection| collection.id)
-    }
-}
-
-pub fn fetch_json_string(url: &str) -> Result<String, Error> {
-    let client = reqwest::blocking::Client::new();
-    let response = client.get(url).send()?.text()?;
-    Ok(response)
-}
-
-pub fn fetch_collection_id(label: &str) -> u32 {
-    let settings = SETTINGS.lock().unwrap();
-    let apikey = settings.get("apikey").expect("An API key is required");
-    let colletions = format!("{}/collections?apikey={}", API_URL, apikey);
-    let collections_data =
-        fetch_collection_data(&colletions).expect("Error fetching users collection info");
-    let collection_id = collections_data
-        .find_collection_id(&label)
-        .expect("Collection not available");
-    return collection_id;
-}
-
-fn fetch_collection_data(url: &str) -> Result<CollectionsData, reqwest::Error> {
-    let response = fetch_json_string(url);
-    let collections_data = serde_json::from_str::<CollectionsData>(response.unwrap().as_ref());
-    if collections_data.is_err() {
-        panic!("{}", "Error with API. Check username and apikey");
-    }
-    Ok(collections_data.unwrap())
-}
-
-pub fn choose_from_collection(label: &str) -> String {
-    let mut wallpapers: Vec<String> = Vec::new();
-    let flags = parseargs::cli_args();
-
-    let mut collection_cache = files::cache_dir_path().clone();
-    collection_cache.push(label);
-
-    if flags.from_cache && collection_cache.exists() {
-        let v = files::cache_to_vec(label);
-        wallpapers.extend(v);
-    } else {
-        let collection_id = fetch_collection_id(&label);
-        let wp_list = fetch_collection(collection_id);
-        wallpapers.extend(wp_list);
-        if wallpapers.len() > 0 {
-            _ = files::vec_to_cache(&wallpapers, label);
-        }
-    }
-
-    let random_wallpaper = wallpapers.choose(&mut rand::thread_rng());
-    random_wallpaper.unwrap().to_string()
-}
-
-pub fn fetch_query(sort: Sorting) -> Vec<String> {
-    let settings = SETTINGS.lock().unwrap();
-    let apikey = settings.get("apikey").unwrap();
-    let categories = settings.get("categories").unwrap();
-    let purity = settings.get("purity").unwrap();
-
-    let seed = utils::generate_seed();
-
-    let mut wallpapers: Vec<String> = Vec::new();
-
-    let sorting = match sort {
-        Sorting::Toplist => "toplist",
-        Sorting::Hot => "hot",
-        Sorting::Random => "random",
-    };
-
-    let url = format!(
-        "{}/search?categories={}&purity={}&seed={}&ratios=landscape&sorting={}&apikey={}",
-        API_URL, categories, purity, seed, sorting, apikey
-    );
-
-    dbg!(&url);
-
-    let wps = fetch_query_page(url.as_ref(), 1).unwrap();
-    wallpapers.extend(wps);
-
-    let _ = vec_to_cache(&wallpapers, ".query");
-
-    return wallpapers;
-}
-
-// TODO: Move random/hot/toplist search to one query methood - just change sorting order in api
-pub fn fetch_random(query: &str) -> String {
+pub fn fetch_query(sorting: Sorting) -> Result<Vec<String>, CustomError> {
     let settings = SETTINGS.lock().unwrap();
 
-    let apikey = settings.get("apikey").unwrap();
-    let categories = settings.get("categories").unwrap();
-    let purity = settings.get("purity").unwrap();
+    dbg!(&settings);
 
-    let mut wallpapers: Vec<String> = Vec::new();
+    let mut url = URLBuilder::new();
+    url.set_protocol("https")
+        .set_host(API_URL)
+        .add_route("search")
+        .add_param("purity", settings.get("purity").unwrap())
+        .add_param("categories", settings.get("categories").unwrap())
+        .add_param("seed", &utils::generate_seed())
+        .add_param("ratios", "landscape");
 
-    let seed = generate_seed();
-
-    let url = format!(
-        "{}/search?q={}&categories={}&purity={}&seed={}&ratios=landscape&sorting=random&apikey={}",
-        API_URL, query, categories, purity, seed, apikey
-    );
-
-    let wps = fetch_query_page(url.as_ref(), 1).unwrap();
-    wallpapers.extend(wps);
-
-    let _ = vec_to_cache(&wallpapers, ".random");
-
-    let random_wallpaper = wallpapers.choose(&mut rand::thread_rng());
-    random_wallpaper.unwrap().to_string()
-}
-
-fn fetch_query_page(url: &str, page: u32) -> Result<Vec<String>, reqwest::Error> {
-    let page_url = format!("{}&page={}", url, page.to_string());
-    let mut wallpapers: Vec<String> = Vec::new();
-    let response = fetch_json_string(&page_url);
-    let page_data = serde_json::from_str::<PageData>(response.unwrap().as_ref()).unwrap();
-
-    for wallpaper in page_data.data {
-        wallpapers.push(wallpaper.path);
+    if let Some(apikey) = settings.get("apikey") {
+        url.add_param("apikey", apikey);
     }
 
-    Ok(wallpapers)
-}
+    url.add_param("sorting", sorting.param().as_ref());
 
-pub fn fetch_collection(id: u32) -> Vec<String> {
-    let settings = SETTINGS.lock().unwrap();
-
-    let username = settings.get("username").expect("A username is required");
-    let apikey = settings.get("apikey").expect("An API key is required");
-
-    let url = format!(
-        "{}/collections/{}/{}?apikey={}",
-        API_URL, username, id, apikey
-    );
-
-    let response = fetch_json_string(&url);
-    let collection_data =
-        serde_json::from_str::<CollectionData>(response.unwrap().as_ref()).unwrap();
-
-    let mut wallpapers: Vec<String> = Vec::new();
-    for wallpaper in collection_data.data {
-        wallpapers.push(wallpaper.path);
+    if sorting == Sorting::Random {
+        let q = encode(settings.get("random").unwrap());
+        url.add_param("q", &q.into_owned());
     }
 
-    if collection_data.meta.last_page > 1 {
-        for p in 2..=collection_data.meta.last_page {
-            let wps = fetch_collection_page(id, p, username, apikey).unwrap();
-            wallpapers.extend(wps);
-        }
-    }
-    return wallpapers;
-}
+    dbg!(url.build());
 
-fn fetch_collection_page(
-    id: u32,
-    page: u32,
-    username: &str,
-    apikey: &str,
-) -> Result<Vec<String>, reqwest::Error> {
-    let url = format!(
-        "{}/collections/{}/{}?page={}&apikey={}",
-        API_URL, username, id, page, apikey
-    );
-
-    let mut wallpapers: Vec<String> = Vec::new();
-    let response = fetch_json_string(&url);
-    let page_data = serde_json::from_str::<PageData>(response.unwrap().as_ref()).unwrap();
-
-    for wallpaper in page_data.data {
-        wallpapers.push(wallpaper.path);
-    }
-
+    let wallpapers: Vec<String> = Vec::new();
     Ok(wallpapers)
 }

@@ -1,8 +1,14 @@
 mod configuration;
+mod enums;
+mod errors;
 mod files;
 mod parseargs;
+mod structs;
 mod utils;
 mod wallhaven;
+
+use crate::enums::Sorting;
+use crate::errors::CustomError;
 
 #[macro_use]
 extern crate lazy_static;
@@ -16,50 +22,50 @@ lazy_static! {
     };
 }
 
-enum Sorting {
-    Random,
-    Toplist,
-    Hot,
-}
-
 // TODO: Error handling globally
-fn main() {
+fn main() -> Result<(), CustomError> {
     let flags = parseargs::cli_args();
     configuration::parse_config(&flags);
 
-    if flags.clear {
-        // TODO: Clear cache files
-        return;
-    }
-
-    if flags.file {
-        let curr = files::cache_to_vec(".current");
-        println!("{}", &curr[0].to_string());
-        return;
-    }
-
-    if flags.url {
-        let curr = files::cache_to_vec(".current");
-        println!("{}", &curr[1].to_string());
-        return;
-    }
-
-    if flags.collection.is_some() {
-        let chosen = wallhaven::choose_from_collection(flags.collection.unwrap().as_ref());
-        let _ = files::set_wallpaper(&chosen);
-        return;
-    }
-
-    if flags.toplist {
-        let wps = wallhaven::fetch_query(Sorting::Toplist);
-        dbg!(wps);
-        return;
-    }
-
     if flags.random.is_some() {
-        let query = flags.random.unwrap();
-        let chosen = wallhaven::fetch_random(&query);
-        let _ = files::set_wallpaper(&chosen);
-        return;
+        let wallpapers = wallhaven::fetch_query(Sorting::Random);
+        dbg!(wallpapers.unwrap());
     }
+
+    Ok(())
+
+    //if flags.clear {
+    //    return;
+    //}
+    //
+    //if flags.file {
+    //    let curr = files::cache_to_vec(".current");
+    //    println!("{}", &curr[0].to_string());
+    //    return;
+    //}
+    //
+    //if flags.url {
+    //    let curr = files::cache_to_vec(".current");
+    //    println!("{}", &curr[1].to_string());
+    //    return;
+    //}
+    //
+    //if flags.collection.is_some() {
+    //    let chosen = wallhaven::choose_from_collection(flags.collection.unwrap().as_ref());
+    //    let _ = files::set_wallpaper(&chosen);
+    //    return;
+    //}
+    //
+    //if flags.toplist {
+    //    let wps = wallhaven::fetch_query(Sorting::Toplist);
+    //    dbg!(wps);
+    //    return;
+    //}
+    //
+    //if flags.random.is_some() {
+    //    let query = flags.random.unwrap();
+    //    let chosen = wallhaven::fetch_random(&query);
+    //    let _ = files::set_wallpaper(&chosen);
+    //    return;
+    //}
 }
