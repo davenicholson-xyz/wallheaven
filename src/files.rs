@@ -89,7 +89,7 @@ pub fn get_wpid(image_url: &str) -> String {
     return wpid[1].to_string();
 }
 
-pub fn set_wallpaper(image_url: &str) -> io::Result<()> {
+pub fn set_wallpaper(image_url: &str) -> Result<String, std::io::Error> {
     let filename = filename_from_url(image_url);
     let mut fname = cache_dir_path().clone();
     fname.push(filename);
@@ -105,6 +105,5 @@ pub fn set_wallpaper(image_url: &str) -> io::Result<()> {
     let wpid = get_wpid(image_url);
     writeln!(current, "https://wallhaven.cc/w/{}", wpid)?;
 
-    println!("{}", fname.display().to_string());
-    Ok(())
+    Ok(fname.display().to_string())
 }

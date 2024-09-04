@@ -1,4 +1,5 @@
 use rand::distributions::Alphanumeric;
+use rand::seq::SliceRandom;
 use rand::Rng;
 
 pub fn generate_seed() -> String {
@@ -8,4 +9,8 @@ pub fn generate_seed() -> String {
         .map(char::from)
         .collect();
     return s;
+}
+
+pub fn random_vec(v: &Vec<String>) -> String {
+    v.choose(&mut rand::thread_rng()).unwrap().to_string()
 }

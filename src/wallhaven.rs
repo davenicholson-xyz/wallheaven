@@ -1,16 +1,13 @@
 use crate::enums::Sorting;
-use crate::errors::CustomError;
-use crate::{utils, SETTINGS};
-
+use crate::structs::{CollectionData, CollectionsData, PageData};
+use crate::{files, utils, SETTINGS};
 use url_builder::URLBuilder;
 use urlencoding::encode;
 
 const API_URL: &str = "wallhaven.cc/api/v1";
 
-pub fn fetch_query(sorting: Sorting) -> Result<Vec<String>, CustomError> {
+pub fn fetch_query(sorting: Sorting) -> Result<Vec<String>, reqwest::Error> {
     let settings = SETTINGS.lock().unwrap();
-
-    dbg!(&settings);
 
     let mut url = URLBuilder::new();
     url.set_protocol("https")
@@ -32,8 +29,27 @@ pub fn fetch_query(sorting: Sorting) -> Result<Vec<String>, CustomError> {
         url.add_param("q", &q.into_owned());
     }
 
-    dbg!(url.build());
+    let wallpapers = fetch_query_page(url, 1)?;
+    let _ = files::vec_to_cache(&wallpapers, ".query");
+    Ok(wallpapers)
+}
 
-    let wallpapers: Vec<String> = Vec::new();
+fn fetch_json_string(url: &str) -> Result<String, reqwest::Error> {
+    let client = reqwest::blocking::Client::new();
+    let response = client.get(url).send()?.text()?;
+    Ok(response)
+}
+
+fn fetch_query_page(mut url: URLBuilder, page: u32) -> Result<Vec<String>, reqwest::Error> {
+    url.add_param("page", &page.to_string());
+
+    let response = fetch_json_string(&url.build())?;
+    let page_data = serde_json::from_str::<PageData>(&response).unwrap();
+
+    let mut wallpapers: Vec<String> = Vec::new();
+    for wallpaper in page_data.data {
+        wallpapers.push(wallpaper.path);
+    }
+
     Ok(wallpapers)
 }

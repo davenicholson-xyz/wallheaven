@@ -23,6 +23,10 @@ pub struct Flags {
     #[arg(short, long)]
     pub toplist: bool,
 
+    /// Query to search for random wallpaper
+    #[arg(long)]
+    pub hot: bool,
+
     /// Purity (sfw|sketchy|nsfw) or binary flags
     #[arg(short, long)]
     pub purity: Option<String>,
