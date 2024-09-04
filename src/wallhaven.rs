@@ -122,7 +122,7 @@ pub fn fetch_random(query: &str) -> Vec<String> {
     let seed: u32 = rng.gen_range(0..1000000);
 
     let url = format!(
-        "{}/search?q={}&categories={}&purity={}&seed={}ratios=landscape&sorting=random&apikey={}",
+        "{}/search?q={}&categories={}&purity={}&seed={}&ratios=landscape&sorting=random&apikey={}",
         API_URL, query, categories, purity, seed, apikey
     );
 

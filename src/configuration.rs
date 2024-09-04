@@ -27,7 +27,7 @@ pub fn parse_config(flags: &Flags) {
 fn parse_flags_config(flags: &Flags) -> HashMap<String, String> {
     let mut flags_hash = HashMap::<String, String>::new();
 
-    let fields_to_parse = vec!["apikey", "collection", "random"];
+    let fields_to_parse = vec!["apikey", "collection", "random", "purity", "categories"];
 
     for field in fields_to_parse {
         if let Some(value) = flags.get(field) {

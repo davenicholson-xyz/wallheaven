@@ -19,9 +19,13 @@ pub struct Flags {
     #[arg(short, long)]
     pub random: Option<String>,
 
-    /// Purity (sfw|sketchy|nsfw) or bindary flags
+    /// Purity (sfw|sketchy|nsfw) or binary flags
     #[arg(short, long)]
     pub purity: Option<String>,
+
+    /// Categories to search from (general|anime|people) or binary flags
+    #[arg(long, alias = "cat")]
+    pub categories: Option<String>,
 
     /// Update collection from last search to minimise api calls
     #[arg(long = "from-cache")]
@@ -42,6 +46,8 @@ impl Flags {
             "apikey" => Some(&self.apikey),
             "collection" => Some(&self.collection),
             "random" => Some(&self.random),
+            "purity" => Some(&self.purity),
+            "categories" => Some(&self.categories),
             _ => None,
         }
     }
