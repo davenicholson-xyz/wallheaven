@@ -26,12 +26,12 @@ fn main() -> Result<(), reqwest::Error> {
     configuration::parse_config(&flags);
 
     if flags.random.is_some() {
-        let wallpapers = wallhaven::query(Sorting::Random);
-        dbg!(wallpapers.unwrap());
+        let wallpapers = wallhaven::query(Sorting::Random)?;
+        //dbg!(wallpapers);
         //let wallpapers = wallhaven::fetch_query(Sorting::Random)?;
-        //let chosen = utils::random_vec(&wallpapers);
-        //let set = files::set_wallpaper(&chosen).unwrap();
-        //println!("{set}");
+        let chosen = utils::random_vec(&wallpapers);
+        let set = files::set_wallpaper(&chosen).unwrap();
+        println!("{set}");
         return Ok(());
     }
 

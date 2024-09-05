@@ -54,8 +54,8 @@ fn fetch_query(sorting: Sorting) -> Result<Vec<String>, reqwest::Error> {
     }
 
     if sorting == Sorting::Random {
-        let q = encode(settings.get("random").unwrap());
-        url.query_pairs_mut().append_pair("q", &q.into_owned());
+        let q = settings.get("random").unwrap();
+        url.query_pairs_mut().append_pair("q", q);
     }
 
     let mut wallpapers: Vec<String> = Vec::new();
