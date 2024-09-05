@@ -6,13 +6,13 @@ pub(crate) enum Sorting {
 }
 
 impl Sorting {
-    //pub fn file(&self) -> Option<String> {
-    //    match self {
-    //        Sorting::Random => None,
-    //        Sorting::Toplist => Some(".toplist".to_string()),
-    //        Sorting::Hot => Some(".hot".to_string()),
-    //    }
-    //}
+    pub fn file(&self) -> Option<String> {
+        match self {
+            Sorting::Random => None,
+            Sorting::Toplist => Some(".toplist".to_string()),
+            Sorting::Hot => Some(".hot".to_string()),
+        }
+    }
     pub fn param(&self) -> String {
         match self {
             Sorting::Random => "random".to_string(),

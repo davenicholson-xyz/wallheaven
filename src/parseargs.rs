@@ -35,6 +35,10 @@ pub struct Flags {
     #[arg(long, alias = "cat")]
     pub categories: Option<String>,
 
+    /// Time in seconds to use cache file before requery of wallhaven.cc
+    #[arg(long = "cache-age")]
+    pub cache_age: Option<String>,
+
     /// Update collection from last search to minimise api calls
     #[arg(long = "from-cache")]
     pub from_cache: bool,
@@ -53,6 +57,7 @@ pub struct Flags {
 }
 
 impl Flags {
+    // TODO: Change this to a generic so can chech for stirngs and u32 etc.
     pub fn get(&self, field_name: &str) -> Option<&Option<String>> {
         match field_name {
             "apikey" => Some(&self.apikey),
