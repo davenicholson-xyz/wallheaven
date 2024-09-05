@@ -7,6 +7,7 @@ use std::path::Path;
 pub fn parse_config(flags: &Flags) {
     let mut settings = SETTINGS.lock().unwrap();
     // TODO: update once generic is implemented
+    // TODO: Rename cache_age to something else
     settings.insert("cache_age".to_string(), "600".to_string());
     settings.insert("purity".to_string(), "100".to_string());
     settings.insert("categories".to_string(), "111".to_string());
