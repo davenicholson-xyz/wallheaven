@@ -5,14 +5,11 @@ use crate::files::cache_to_vec;
 use crate::structs::{CollectionData, CollectionsData, PageData, Wallpaper};
 use crate::{files, utils, SETTINGS};
 use url::Url;
-use url_builder::URLBuilder;
 use urlencoding::encode;
 
 const API_URL: &str = "https://wallhaven.cc/api/v1";
 
 pub fn query(sorting: Sorting) -> Result<Vec<String>, reqwest::Error> {
-    print!("{}", sorting.file().unwrap());
-
     if sorting.file().is_none() {
         return Ok(fetch_query(sorting)?);
     }
@@ -24,30 +21,23 @@ pub fn query(sorting: Sorting) -> Result<Vec<String>, reqwest::Error> {
     let mut query_cache = files::cache_dir_path().clone();
     query_cache.push(sorting.file().unwrap());
 
-    dbg!(&query_cache);
-
     if query_cache.exists() {
-        println!("{} exists", sorting.file().unwrap());
         let metadata = fs::metadata(query_cache).unwrap();
         if let Ok(time) = metadata.modified() {
             if time.elapsed().unwrap().as_secs() > maxage {
-                println!("using query");
                 return Ok(fetch_query(sorting)?);
             } else {
-                println!("using cache");
                 return Ok(cache_to_vec(&sorting.file().unwrap()));
             }
         } else {
-            println!("using cache");
             return Ok(cache_to_vec(&sorting.file().unwrap()));
         }
     } else {
-        println!("using query");
         return Ok(fetch_query(sorting)?);
     }
 }
 
-pub fn fetch_query(sorting: Sorting) -> Result<Vec<String>, reqwest::Error> {
+fn fetch_query(sorting: Sorting) -> Result<Vec<String>, reqwest::Error> {
     let settings = SETTINGS.lock().unwrap();
 
     let mut url = Url::parse(API_URL).unwrap();
