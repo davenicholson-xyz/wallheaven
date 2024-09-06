@@ -103,7 +103,7 @@ pub fn get_wpid(image_url: &str) -> String {
     return wpid[1].to_string();
 }
 
-pub fn set_wallpaper(image_url: &str) -> Result<String, std::io::Error> {
+pub fn set_wallpaper(image_url: &str) -> Result<String> {
     let filename = filename_from_url(image_url);
     let mut fname = cache_dir_path().clone();
     fname.push(filename);

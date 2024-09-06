@@ -27,8 +27,11 @@ fn main() -> Result<()> {
     configuration::parse_config(&flags);
 
     if flags.collection.is_some() {
-        let collection_id = wallhaven::get_collection_id(&flags.collection.unwrap())?;
-        dbg!(collection_id);
+        let wallpapers = wallhaven::collection(&flags.collection.unwrap())?;
+        let chosen = utils::random_vec(&wallpapers);
+        let set = files::set_wallpaper(&chosen).unwrap();
+        println!("{set}");
+        return Ok(());
     }
 
     if flags.random.is_some() {

@@ -1,9 +1,7 @@
-use std::fs;
-
 use crate::enums::Sorting;
 use crate::errors::CustomError;
 use crate::files::{cache_to_vec, delete_if_older_than, vec_to_cache};
-use crate::structs::{CollectionData, CollectionsData, PageData, Wallpaper};
+use crate::structs::{CollectionData, CollectionMeta, CollectionsData, PageData, Wallpaper};
 use crate::{files, utils, SETTINGS};
 use anyhow::{anyhow, Result};
 use url::Url;
@@ -28,6 +26,26 @@ pub fn query(sorting: Sorting) -> Result<Vec<String>> {
         return Ok(cache_to_vec(&sorting.file().unwrap()));
     } else {
         return Ok(fetch_query(sorting)?);
+    }
+}
+
+pub fn collection(label: &str) -> Result<Vec<String>> {
+    let settings = SETTINGS.lock().unwrap();
+    let maxage = settings.get("cache_age").unwrap().parse::<u64>().unwrap();
+    std::mem::drop(settings);
+
+    let mut collection_cache = files::cache_dir_path().clone();
+    collection_cache.push(&label);
+
+    delete_if_older_than(&collection_cache, maxage)?;
+
+    if collection_cache.exists() {
+        return Ok(cache_to_vec(
+            &collection_cache.into_os_string().into_string().unwrap(),
+        ));
+    } else {
+        let id = get_collection_id(label)?;
+        return Ok(fetch_collection(id)?);
     }
 }
 
@@ -68,7 +86,52 @@ fn fetch_query(sorting: Sorting) -> Result<Vec<String>> {
     }
 }
 
-pub fn get_collection_id(label: &str) -> Result<u32> {
+fn fetch_collection(id: u32) -> Result<Vec<String>> {
+    let settings = SETTINGS.lock().unwrap();
+    let label = settings.get("collection").unwrap();
+
+    let mut url = Url::parse(API_URL).unwrap();
+    url.path_segments_mut().unwrap().push("collections");
+
+    let username = settings.get("username");
+    if username.is_some() {
+        url.path_segments_mut().unwrap().push(&username.unwrap());
+    } else {
+        return Err(anyhow!(CustomError::new(
+            "Username required to find collection"
+        )));
+    }
+
+    url.path_segments_mut().unwrap().push(&id.to_string());
+
+    if let Some(apikey) = settings.get("apikey") {
+        url.query_pairs_mut().append_pair("apikey", apikey);
+    }
+
+    let cd = get_collection_meta(&url)?;
+
+    let mut wallpapers: Vec<String> = Vec::new();
+    for p in 1..=cd.last_page {
+        let u = url.clone();
+        let wps = fetch_query_page(u, p)?;
+        wallpapers.extend(wps);
+    }
+
+    if wallpapers.len() > 0 {
+        let _ = files::vec_to_cache(&wallpapers, &label);
+        return Ok(wallpapers);
+    } else {
+        return Err(anyhow!(CustomError::new("No wallpapers found")));
+    }
+}
+
+fn get_collection_meta(url: &Url) -> Result<CollectionMeta> {
+    let response = fetch_json_string(&url.as_str())?;
+    let collection_meta = serde_json::from_str::<CollectionData>(&response)?.meta;
+    Ok(collection_meta)
+}
+
+fn get_collection_id(label: &str) -> Result<u32> {
     let settings = SETTINGS.lock().unwrap();
     let maxage = settings.get("cache_age").unwrap().parse::<u64>().unwrap();
     std::mem::drop(settings);

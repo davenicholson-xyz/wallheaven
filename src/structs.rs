@@ -17,13 +17,13 @@ pub struct CollectionsData {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct CollectonMeta {
+pub struct CollectionMeta {
     pub last_page: u32,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct CollectionData {
-    pub meta: CollectonMeta,
+    pub meta: CollectionMeta,
     pub data: Vec<Wallpaper>,
 }
 
