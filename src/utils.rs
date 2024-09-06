@@ -12,5 +12,9 @@ pub fn generate_seed() -> String {
 }
 
 pub fn random_vec(v: &Vec<String>) -> String {
-    v.choose(&mut rand::thread_rng()).unwrap().to_string()
+    if v.len() > 0 {
+        return v.choose(&mut rand::thread_rng()).unwrap().to_string();
+    } else {
+        return "None found...".to_string();
+    }
 }

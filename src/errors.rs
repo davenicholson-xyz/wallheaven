@@ -1,17 +1,18 @@
-use std::error::Error;
-use std::fmt::Display;
-
 #[derive(Debug)]
-pub enum CustomError {
-    APIError,
+pub struct CustomError {
+    message: String,
 }
 
-impl Error for CustomError {}
-impl Display for CustomError {
+impl CustomError {
+    pub fn new(message: &str) -> Self {
+        CustomError {
+            message: message.to_string(),
+        }
+    }
+}
+
+impl std::fmt::Display for CustomError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let message = match self {
-            Self::APIError => "Error with API",
-        };
-        write!(f, "{message}")
+        write!(f, "{}", self.message)
     }
 }

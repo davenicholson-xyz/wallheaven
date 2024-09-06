@@ -8,6 +8,7 @@ mod utils;
 mod wallhaven;
 
 use crate::enums::Sorting;
+use anyhow::Result;
 
 #[macro_use]
 extern crate lazy_static;
@@ -21,14 +22,17 @@ lazy_static! {
     };
 }
 
-fn main() -> Result<(), reqwest::Error> {
+fn main() -> Result<()> {
     let flags = parseargs::cli_args();
     configuration::parse_config(&flags);
 
+    if flags.collection.is_some() {
+        let collection_id = wallhaven::get_collection_id(&flags.collection.unwrap())?;
+        dbg!(collection_id);
+    }
+
     if flags.random.is_some() {
         let wallpapers = wallhaven::query(Sorting::Random)?;
-        //dbg!(wallpapers);
-        //let wallpapers = wallhaven::fetch_query(Sorting::Random)?;
         let chosen = utils::random_vec(&wallpapers);
         let set = files::set_wallpaper(&chosen).unwrap();
         println!("{set}");
@@ -36,22 +40,18 @@ fn main() -> Result<(), reqwest::Error> {
     }
 
     if flags.toplist {
-        let wallpapers = wallhaven::query(Sorting::Toplist);
-        dbg!(wallpapers.unwrap());
-        //let wallpapers = wallhaven::fetch_query(Sorting::Toplist)?;
-        //let chosen = utils::random_vec(&wallpapers);
-        //let set = files::set_wallpaper(&chosen).unwrap();
-        //println!("{set}");
+        let wallpapers = wallhaven::query(Sorting::Toplist)?;
+        let chosen = utils::random_vec(&wallpapers);
+        let set = files::set_wallpaper(&chosen).unwrap();
+        println!("{set}");
         return Ok(());
     }
 
     if flags.hot {
-        let wallpapers = wallhaven::query(Sorting::Hot);
-        dbg!(wallpapers.unwrap());
-        //let wallpapers = wallhaven::fetch_query(Sorting::Hot)?;
-        //let chosen = utils::random_vec(&wallpapers);
-        //let set = files::set_wallpaper(&chosen).unwrap();
-        //println!("{set}");
+        let wallpapers = wallhaven::query(Sorting::Hot)?;
+        let chosen = utils::random_vec(&wallpapers);
+        let set = files::set_wallpaper(&chosen).unwrap();
+        println!("{set}");
         return Ok(());
     }
 
