@@ -5,6 +5,8 @@ use std::path::Path;
 use std::{env, path::PathBuf};
 use url::Url;
 
+use anyhow::{anyhow, Result};
+
 pub fn config_dir_path() -> PathBuf {
     if env::consts::OS == "windows" {
         let mut conf_dir = dirs::config_dir().unwrap();
@@ -15,6 +17,18 @@ pub fn config_dir_path() -> PathBuf {
         conf_dir.push(".config/wallheaven");
         return conf_dir;
     }
+}
+
+pub fn delete_if_older_than(file: &PathBuf, seconds: u64) -> Result<()> {
+    if file.exists() {
+        let metadata = fs::metadata(file)?;
+        if let Ok(time) = metadata.modified() {
+            if time.elapsed().unwrap().as_secs() > seconds {
+                std::fs::remove_file(file)?
+            }
+        }
+    }
+    Ok(())
 }
 
 pub fn config_file_path() -> PathBuf {

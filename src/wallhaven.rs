@@ -1,12 +1,11 @@
-use std::{collections, fs};
+use std::fs;
 
 use crate::enums::Sorting;
 use crate::errors::CustomError;
-use crate::files::{cache_to_vec, vec_to_cache};
+use crate::files::{cache_to_vec, delete_if_older_than, vec_to_cache};
 use crate::structs::{CollectionData, CollectionsData, PageData, Wallpaper};
 use crate::{files, utils, SETTINGS};
 use anyhow::{anyhow, Result};
-use reqwest::ResponseBuilderExt;
 use url::Url;
 
 const API_URL: &str = "https://wallhaven.cc/api/v1";
@@ -23,17 +22,10 @@ pub fn query(sorting: Sorting) -> Result<Vec<String>> {
     let mut query_cache = files::cache_dir_path().clone();
     query_cache.push(sorting.file().unwrap());
 
+    delete_if_older_than(&query_cache, maxage)?;
+
     if query_cache.exists() {
-        let metadata = fs::metadata(query_cache).unwrap();
-        if let Ok(time) = metadata.modified() {
-            if time.elapsed().unwrap().as_secs() > maxage {
-                return Ok(fetch_query(sorting)?);
-            } else {
-                return Ok(cache_to_vec(&sorting.file().unwrap()));
-            }
-        } else {
-            return Ok(cache_to_vec(&sorting.file().unwrap()));
-        }
+        return Ok(cache_to_vec(&sorting.file().unwrap()));
     } else {
         return Ok(fetch_query(sorting)?);
     }
@@ -77,17 +69,21 @@ fn fetch_query(sorting: Sorting) -> Result<Vec<String>> {
 }
 
 pub fn get_collection_id(label: &str) -> Result<u32> {
+    let settings = SETTINGS.lock().unwrap();
+    let maxage = settings.get("cache_age").unwrap().parse::<u64>().unwrap();
+    std::mem::drop(settings);
+
     let mut collection_id_cache = files::cache_dir_path().clone();
     collection_id_cache.push(".collections");
+
+    delete_if_older_than(&collection_id_cache, maxage)?;
 
     let collections: Vec<(String, u32)>;
 
     if collection_id_cache.exists() {
-        println!("collection data cache");
         let collections_list = cache_to_vec(".collections");
         collections = collection_to_tuple_pairs(collections_list)?;
     } else {
-        println!("collection data query");
         let collections_list = fetch_collections_data()?;
         vec_to_cache(&collections_list, ".collections")?;
         collections = collection_to_tuple_pairs(collections_list)?;
