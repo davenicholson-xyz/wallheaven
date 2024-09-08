@@ -11,11 +11,7 @@ use anyhow::Result;
 use enums::Sorting;
 
 fn main() -> Result<()> {
-    //let config = config::CONFIG.lock().unwrap();
-    //dbg!(&config);
-    //
     let flags = parseargs::cli_args();
-    //configuration::parse_config()?;
 
     if flags.collection.is_some() {
         let wallpapers = wallhaven::collection(&flags.collection.unwrap())?;

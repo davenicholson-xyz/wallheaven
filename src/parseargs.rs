@@ -36,8 +36,8 @@ pub struct Flags {
     pub categories: Option<String>,
 
     /// Time in seconds to use cache file before requery of wallhaven.cc
-    #[arg(long = "cache-age")]
-    pub cache_age: Option<i64>,
+    #[arg(short, long)]
+    pub expiry: Option<i64>,
 
     /// Update collection from last search to minimise api calls
     #[arg(long = "from-cache")]

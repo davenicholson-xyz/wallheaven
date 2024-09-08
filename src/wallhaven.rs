@@ -15,13 +15,13 @@ pub fn query(sorting: Sorting) -> Result<Vec<String>> {
     }
 
     let config = config::CONFIG.lock().unwrap();
-    let maxage = config.get_int("cache_age")?;
+    let expiry = config.get_int("expiry")?;
     std::mem::drop(config);
 
     let mut query_cache = files::cache_dir_path().clone();
     query_cache.push(sorting.file().unwrap());
 
-    delete_if_older_than(&query_cache, maxage as u64)?;
+    delete_if_older_than(&query_cache, expiry as u64)?;
 
     if query_cache.exists() {
         return Ok(cache_to_vec(&sorting.file().unwrap()));
@@ -32,13 +32,13 @@ pub fn query(sorting: Sorting) -> Result<Vec<String>> {
 
 pub fn collection(label: &str) -> Result<Vec<String>> {
     let config = config::CONFIG.lock().unwrap();
-    let maxage = config.get_int("cache_age")?;
+    let expiry = config.get_int("expiry")?;
     std::mem::drop(config);
 
     let mut collection_cache = files::cache_dir_path().clone();
     collection_cache.push(&label);
 
-    delete_if_older_than(&collection_cache, maxage as u64)?;
+    delete_if_older_than(&collection_cache, expiry as u64)?;
 
     if collection_cache.exists() {
         return Ok(cache_to_vec(
@@ -137,13 +137,13 @@ fn get_collection_meta(url: &Url) -> Result<CollectionMeta> {
 
 fn get_collection_id(label: &str) -> Result<u32> {
     let config = config::CONFIG.lock().unwrap();
-    let maxage = config.get_int("cache_age")?;
+    let expiry = config.get_int("expiry")?;
     std::mem::drop(config);
 
     let mut collection_id_cache = files::cache_dir_path().clone();
     collection_id_cache.push(".collections");
 
-    delete_if_older_than(&collection_id_cache, maxage as u64)?;
+    delete_if_older_than(&collection_id_cache, expiry as u64)?;
 
     let collections: Vec<(String, u32)>;
 

@@ -27,8 +27,8 @@ pub static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| {
         .add_source(config::File::with_name(&cfg_path))
         .add_source(config::Environment::with_prefix("WALLHEAVEN"));
 
-    if let Some(cache_age) = flags.cache_age {
-        config = config.set_override("cache_age", cache_age).unwrap();
+    if let Some(expiry) = flags.expiry {
+        config = config.set_override("expiry", expiry).unwrap();
     }
 
     if let Some(apikey) = flags.apikey {
