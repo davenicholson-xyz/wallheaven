@@ -57,7 +57,6 @@ pub struct Flags {
 }
 
 impl Flags {
-    // TODO: Change this to a generic so can chech for stirngs and u32 etc.
     pub fn get(&self, field_name: &str) -> Option<&Option<String>> {
         match field_name {
             "apikey" => Some(&self.apikey),
