@@ -1757,6 +1757,7 @@ dependencies = [
  "dirs",
  "field_accessor",
  "lazy_static",
+ "once_cell",
  "rand",
  "reqwest",
  "serde",

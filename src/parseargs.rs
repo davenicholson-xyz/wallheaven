@@ -37,7 +37,7 @@ pub struct Flags {
 
     /// Time in seconds to use cache file before requery of wallhaven.cc
     #[arg(long = "cache-age")]
-    pub cache_age: Option<String>,
+    pub cache_age: Option<i64>,
 
     /// Update collection from last search to minimise api calls
     #[arg(long = "from-cache")]
@@ -56,18 +56,18 @@ pub struct Flags {
     pub clear: bool,
 }
 
-impl Flags {
-    pub fn get(&self, field_name: &str) -> Option<&Option<String>> {
-        match field_name {
-            "apikey" => Some(&self.apikey),
-            "collection" => Some(&self.collection),
-            "random" => Some(&self.random),
-            "purity" => Some(&self.purity),
-            "categories" => Some(&self.categories),
-            _ => None,
-        }
-    }
-}
+//impl Flags {
+//    pub fn get(&self, field_name: &str) -> Option<&Option<String>> {
+//        match field_name {
+//            "apikey" => Some(&self.apikey),
+//            "collection" => Some(&self.collection),
+//            "random" => Some(&self.random),
+//            "purity" => Some(&self.purity),
+//            "categories" => Some(&self.categories),
+//            _ => None,
+//        }
+//    }
+//}
 
 pub fn cli_args() -> Flags {
     let flags = Flags::parse();

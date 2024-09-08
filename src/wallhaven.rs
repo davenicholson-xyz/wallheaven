@@ -1,8 +1,9 @@
 use crate::enums::Sorting;
 use crate::errors::CustomError;
 use crate::files::{cache_to_vec, delete_if_older_than, vec_to_cache};
+use crate::parseargs;
 use crate::structs::{CollectionData, CollectionMeta, CollectionsData, PageData};
-use crate::{files, utils, SETTINGS};
+use crate::{config, files, utils};
 use anyhow::{anyhow, Result};
 use url::Url;
 
@@ -13,14 +14,14 @@ pub fn query(sorting: Sorting) -> Result<Vec<String>> {
         return Ok(fetch_query(sorting)?);
     }
 
-    let settings = SETTINGS.lock().unwrap();
-    let maxage = settings.get("cache_age").unwrap().parse::<u64>().unwrap();
-    std::mem::drop(settings);
+    let config = config::CONFIG.lock().unwrap();
+    let maxage = config.get_int("cache_age")?;
+    std::mem::drop(config);
 
     let mut query_cache = files::cache_dir_path().clone();
     query_cache.push(sorting.file().unwrap());
 
-    delete_if_older_than(&query_cache, maxage)?;
+    delete_if_older_than(&query_cache, maxage as u64)?;
 
     if query_cache.exists() {
         return Ok(cache_to_vec(&sorting.file().unwrap()));
@@ -30,14 +31,14 @@ pub fn query(sorting: Sorting) -> Result<Vec<String>> {
 }
 
 pub fn collection(label: &str) -> Result<Vec<String>> {
-    let settings = SETTINGS.lock().unwrap();
-    let maxage = settings.get("cache_age").unwrap().parse::<u64>().unwrap();
-    std::mem::drop(settings);
+    let config = config::CONFIG.lock().unwrap();
+    let maxage = config.get_int("cache_age")?;
+    std::mem::drop(config);
 
     let mut collection_cache = files::cache_dir_path().clone();
     collection_cache.push(&label);
 
-    delete_if_older_than(&collection_cache, maxage)?;
+    delete_if_older_than(&collection_cache, maxage as u64)?;
 
     if collection_cache.exists() {
         return Ok(cache_to_vec(
@@ -50,30 +51,32 @@ pub fn collection(label: &str) -> Result<Vec<String>> {
 }
 
 fn fetch_query(sorting: Sorting) -> Result<Vec<String>> {
-    let settings = SETTINGS.lock().unwrap();
+    let flags = parseargs::cli_args();
+    let config = config::CONFIG.lock().unwrap();
 
     let mut url = Url::parse(API_URL).unwrap();
     url.path_segments_mut().unwrap().push("search");
     url.query_pairs_mut()
-        .append_pair("purity", settings.get("purity").unwrap())
-        .append_pair("categories", settings.get("categories").unwrap())
+        .append_pair("purity", &config.get_string("purity")?)
+        .append_pair("categories", &config.get_string("categories")?)
         .append_pair("seed", &utils::generate_seed())
-        .append_pair("ratios", "landscape")
+        .append_pair("ratios", &config.get_string("ratios")?)
         .append_pair("sorting", sorting.param().as_ref());
 
-    if let Some(apikey) = settings.get("apikey") {
-        url.query_pairs_mut().append_pair("apikey", apikey);
-    }
+    //TODO: If apikey then set apkey
+    //if let Some(apikey) = settings.get("apikey") {
+    //    url.query_pairs_mut().append_pair("apikey", apikey);
+    //}
 
     if sorting == Sorting::Random {
-        let q = settings.get("random").unwrap();
-        url.query_pairs_mut().append_pair("q", q);
+        let q = flags.random.unwrap();
+        url.query_pairs_mut().append_pair("q", &q);
     }
 
     let mut wallpapers: Vec<String> = Vec::new();
-    for p in 1..=settings.get("pages").unwrap().parse::<u32>().unwrap() {
+    for p in 1..=config.get_int("pages")? {
         let u = url.clone();
-        let wps = fetch_query_page(u, p)?;
+        let wps = fetch_query_page(u, p as u32)?;
         wallpapers.extend(wps);
     }
 
@@ -87,15 +90,15 @@ fn fetch_query(sorting: Sorting) -> Result<Vec<String>> {
 }
 
 fn fetch_collection(id: u32) -> Result<Vec<String>> {
-    let settings = SETTINGS.lock().unwrap();
-    let label = settings.get("collection").unwrap();
+    let config = config::CONFIG.lock().unwrap();
+    let label = config.get_string("collection")?;
 
     let mut url = Url::parse(API_URL).unwrap();
     url.path_segments_mut().unwrap().push("collections");
 
-    let username = settings.get("username");
-    if username.is_some() {
-        url.path_segments_mut().unwrap().push(&username.unwrap());
+    let username = config.get_string("username");
+    if username.is_ok() {
+        url.path_segments_mut().unwrap().push(&username?);
     } else {
         return Err(anyhow!(CustomError::new(
             "Username required to find collection"
@@ -104,8 +107,9 @@ fn fetch_collection(id: u32) -> Result<Vec<String>> {
 
     url.path_segments_mut().unwrap().push(&id.to_string());
 
-    if let Some(apikey) = settings.get("apikey") {
-        url.query_pairs_mut().append_pair("apikey", apikey);
+    let apikey = config.get_string("apikey");
+    if apikey.is_ok() {
+        url.query_pairs_mut().append_pair("apikey", &apikey?);
     }
 
     let cd = get_collection_meta(&url)?;
@@ -132,14 +136,14 @@ fn get_collection_meta(url: &Url) -> Result<CollectionMeta> {
 }
 
 fn get_collection_id(label: &str) -> Result<u32> {
-    let settings = SETTINGS.lock().unwrap();
-    let maxage = settings.get("cache_age").unwrap().parse::<u64>().unwrap();
-    std::mem::drop(settings);
+    let config = config::CONFIG.lock().unwrap();
+    let maxage = config.get_int("cache_age")?;
+    std::mem::drop(config);
 
     let mut collection_id_cache = files::cache_dir_path().clone();
     collection_id_cache.push(".collections");
 
-    delete_if_older_than(&collection_id_cache, maxage)?;
+    delete_if_older_than(&collection_id_cache, maxage as u64)?;
 
     let collections: Vec<(String, u32)>;
 
@@ -179,13 +183,14 @@ fn find_id_by_label(tuples: &Vec<(String, u32)>, label: &str) -> Option<u32> {
 }
 
 fn fetch_collections_data() -> Result<Vec<String>> {
-    let settings = SETTINGS.lock().unwrap();
+    let config = config::CONFIG.lock().unwrap();
 
     let mut url = Url::parse(API_URL).unwrap();
     url.path_segments_mut().unwrap().push("collections");
 
-    if let Some(apikey) = settings.get("apikey") {
-        url.query_pairs_mut().append_pair("apikey", apikey);
+    let apikey = config.get_string("apikey");
+    if apikey.is_ok() {
+        url.query_pairs_mut().append_pair("apikey", &apikey?);
     } else {
         return Err(anyhow!(CustomError::new(
             "API key required to find collection"

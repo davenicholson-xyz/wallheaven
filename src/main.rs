@@ -1,4 +1,4 @@
-mod configuration;
+mod config;
 mod enums;
 mod errors;
 mod files;
@@ -7,24 +7,15 @@ mod structs;
 mod utils;
 mod wallhaven;
 
-use crate::enums::Sorting;
 use anyhow::Result;
-
-#[macro_use]
-extern crate lazy_static;
-use std::collections::HashMap;
-use std::sync::Mutex;
-lazy_static! {
-    static ref SETTINGS: Mutex<HashMap<String, String>> = {
-        #[allow(unused_mut)]
-        let mut m = HashMap::new();
-        Mutex::new(m)
-    };
-}
+use enums::Sorting;
 
 fn main() -> Result<()> {
+    //let config = config::CONFIG.lock().unwrap();
+    //dbg!(&config);
+    //
     let flags = parseargs::cli_args();
-    configuration::parse_config(&flags)?;
+    //configuration::parse_config()?;
 
     if flags.collection.is_some() {
         let wallpapers = wallhaven::collection(&flags.collection.unwrap())?;
