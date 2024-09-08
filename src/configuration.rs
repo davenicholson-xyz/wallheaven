@@ -1,10 +1,11 @@
 use crate::parseargs::Flags;
 use crate::{files, SETTINGS};
+use anyhow::Result;
 use config::Config;
 use std::collections::HashMap;
 use std::path::Path;
 
-pub fn parse_config(flags: &Flags) {
+pub fn parse_config(flags: &Flags) -> Result<()> {
     let mut settings = SETTINGS.lock().unwrap();
     // TODO: update once generic is implemented
     // TODO: Rename cache_age to something else
@@ -25,6 +26,7 @@ pub fn parse_config(flags: &Flags) {
 
     settings.extend(cfg_file);
     settings.extend(cfg_flags);
+    Ok(())
 }
 
 fn parse_flags_config(flags: &Flags) -> HashMap<String, String> {
@@ -46,6 +48,7 @@ fn parse_config_file(cfg_path: String) -> HashMap<String, String> {
     if Path::new(&cfg_path).exists() {
         let fileconfig = Config::builder()
             .add_source(config::File::with_name(cfg_path.as_ref()))
+            .add_source(config::Environment::with_prefix("WALLHEAVEN"))
             .build()
             .unwrap();
 
