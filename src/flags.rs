@@ -56,19 +56,6 @@ pub struct Flags {
     pub clear: bool,
 }
 
-//impl Flags {
-//    pub fn get(&self, field_name: &str) -> Option<&Option<String>> {
-//        match field_name {
-//            "apikey" => Some(&self.apikey),
-//            "collection" => Some(&self.collection),
-//            "random" => Some(&self.random),
-//            "purity" => Some(&self.purity),
-//            "categories" => Some(&self.categories),
-//            _ => None,
-//        }
-//    }
-//}
-
 pub fn cli_args() -> Flags {
     let flags = Flags::parse();
     return flags;

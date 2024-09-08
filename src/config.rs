@@ -1,11 +1,11 @@
 use crate::files;
-use crate::parseargs;
+use crate::flags;
 use config::Config;
 use once_cell::sync::Lazy;
 use std::sync::Mutex;
 
 pub static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| {
-    let flags = parseargs::cli_args();
+    let flags = flags::cli_args();
 
     let default_config_path = files::config_file_string();
     let flags_config = flags.config.clone();

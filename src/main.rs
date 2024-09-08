@@ -2,7 +2,7 @@ mod config;
 mod enums;
 mod errors;
 mod files;
-mod parseargs;
+mod flags;
 mod structs;
 mod utils;
 mod wallhaven;
@@ -11,7 +11,7 @@ use anyhow::Result;
 use enums::Sorting;
 
 fn main() -> Result<()> {
-    let flags = parseargs::cli_args();
+    let flags = flags::cli_args();
 
     if flags.collection.is_some() {
         let wallpapers = wallhaven::collection(&flags.collection.unwrap())?;

@@ -1,7 +1,7 @@
 use crate::enums::Sorting;
 use crate::errors::CustomError;
 use crate::files::{cache_to_vec, delete_if_older_than, vec_to_cache};
-use crate::parseargs;
+use crate::flags;
 use crate::structs::{CollectionData, CollectionMeta, CollectionsData, PageData};
 use crate::{config, files, utils};
 use anyhow::{anyhow, Result};
@@ -51,7 +51,7 @@ pub fn collection(label: &str) -> Result<Vec<String>> {
 }
 
 fn fetch_query(sorting: Sorting) -> Result<Vec<String>> {
-    let flags = parseargs::cli_args();
+    let flags = flags::cli_args();
     let config = config::CONFIG.lock().unwrap();
 
     let mut url = Url::parse(API_URL).unwrap();
