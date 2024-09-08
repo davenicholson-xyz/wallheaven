@@ -9,6 +9,7 @@ mod wallhaven;
 
 use anyhow::Result;
 use enums::Sorting;
+use std::fs;
 
 fn main() -> Result<()> {
     let flags = flags::cli_args();
@@ -54,6 +55,12 @@ fn main() -> Result<()> {
     if flags.url {
         let curr = files::cache_to_vec(".current");
         println!("{}", &curr[1].to_string());
+        return Ok(());
+    }
+
+    if flags.delete {
+        let cache_path = files::cache_dir_path();
+        fs::remove_dir_all(cache_path)?;
         return Ok(());
     }
 

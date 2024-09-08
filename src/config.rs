@@ -12,7 +12,7 @@ pub static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| {
     let cfg_path = flags_config.unwrap_or(default_config_path);
 
     let mut config = Config::builder()
-        .set_default("cache_age", 600)
+        .set_default("expiry", 600)
         .unwrap()
         .set_default("purity", "100".to_string())
         .unwrap()
@@ -50,5 +50,6 @@ pub static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| {
     if let Some(random) = flags.random {
         config = config.set_override("random", random).unwrap();
     }
+
     Mutex::new(config.build().unwrap())
 });

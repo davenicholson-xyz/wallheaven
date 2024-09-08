@@ -52,8 +52,8 @@ pub struct Flags {
     pub url: bool,
 
     /// Deletes wallpaper cache files
-    #[arg(long)]
-    pub clear: bool,
+    #[arg(short, long)]
+    pub delete: bool,
 }
 
 pub fn cli_args() -> Flags {
