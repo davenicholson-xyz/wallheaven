@@ -1,7 +1,7 @@
 use crate::enums::Sorting;
 use crate::errors::CustomError;
 use crate::files::{cache_to_vec, delete_if_older_than, vec_to_cache};
-use crate::structs::{CollectionData, CollectionMeta, CollectionsData, PageData, Wallpaper};
+use crate::structs::{CollectionData, CollectionMeta, CollectionsData, PageData};
 use crate::{files, utils, SETTINGS};
 use anyhow::{anyhow, Result};
 use url::Url;

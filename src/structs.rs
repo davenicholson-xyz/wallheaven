@@ -24,19 +24,9 @@ pub struct CollectionMeta {
 #[derive(Debug, Deserialize)]
 pub struct CollectionData {
     pub meta: CollectionMeta,
-    pub data: Vec<Wallpaper>,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct PageData {
     pub data: Vec<Wallpaper>,
-}
-
-impl CollectionsData {
-    pub fn find_collection_id(&self, search: &str) -> Option<u32> {
-        self.data
-            .iter()
-            .find(|&collection| collection.label == search)
-            .map(|collection| collection.id)
-    }
 }

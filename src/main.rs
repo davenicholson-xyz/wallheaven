@@ -24,7 +24,7 @@ lazy_static! {
 
 fn main() -> Result<()> {
     let flags = parseargs::cli_args();
-    configuration::parse_config(&flags);
+    configuration::parse_config(&flags)?;
 
     if flags.collection.is_some() {
         let wallpapers = wallhaven::collection(&flags.collection.unwrap())?;

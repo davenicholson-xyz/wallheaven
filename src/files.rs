@@ -5,7 +5,7 @@ use std::path::Path;
 use std::{env, path::PathBuf};
 use url::Url;
 
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 
 pub fn config_dir_path() -> PathBuf {
     if env::consts::OS == "windows" {
