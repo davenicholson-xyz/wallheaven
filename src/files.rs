@@ -105,7 +105,7 @@ pub fn get_wpid(image_url: &str) -> String {
     return wpid[1].to_string();
 }
 
-pub fn set_wallpaper(image_url: &str) -> Result<String> {
+pub fn set_wallpaper(image_url: &str) -> Result<()> {
     let config = config::CONFIG.lock().unwrap();
 
     let filename = filename_from_url(image_url);
@@ -129,8 +129,9 @@ pub fn set_wallpaper(image_url: &str) -> Result<String> {
             .arg(fname.display().to_string())
             .output()
             .expect("Unable to call external script");
-        Ok("".to_string())
+        Ok(())
     } else {
-        Ok(fname.display().to_string())
+        println!("{}", fname.display().to_string());
+        Ok(())
     }
 }

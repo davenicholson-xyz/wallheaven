@@ -17,32 +17,28 @@ fn main() -> Result<()> {
     if flags.collection.is_some() {
         let wallpapers = wallhaven::collection(&flags.collection.unwrap())?;
         let chosen = utils::random_vec(&wallpapers);
-        let set = files::set_wallpaper(&chosen).unwrap();
-        println!("{set}");
+        files::set_wallpaper(&chosen)?;
         return Ok(());
     }
 
     if flags.random.is_some() {
         let wallpapers = wallhaven::query(Sorting::Random)?;
         let chosen = utils::random_vec(&wallpapers);
-        let set = files::set_wallpaper(&chosen).unwrap();
-        println!("{set}");
+        files::set_wallpaper(&chosen)?;
         return Ok(());
     }
 
     if flags.toplist {
         let wallpapers = wallhaven::query(Sorting::Toplist)?;
         let chosen = utils::random_vec(&wallpapers);
-        let set = files::set_wallpaper(&chosen).unwrap();
-        println!("{set}");
+        files::set_wallpaper(&chosen)?;
         return Ok(());
     }
 
     if flags.hot {
         let wallpapers = wallhaven::query(Sorting::Hot)?;
         let chosen = utils::random_vec(&wallpapers);
-        let set = files::set_wallpaper(&chosen).unwrap();
-        println!("{set}");
+        files::set_wallpaper(&chosen)?;
         return Ok(());
     }
 
