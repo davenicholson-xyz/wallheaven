@@ -37,6 +37,10 @@ pub static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| {
         config = config.set_override("expiry", expiry).unwrap();
     }
 
+    if let Some(username) = flags.username {
+        config = config.set_override("username", username).unwrap();
+    }
+
     if let Some(apikey) = flags.apikey {
         config = config.set_override("apikey", apikey).unwrap();
     }

@@ -8,6 +8,10 @@ pub struct Flags {
     #[arg(long)]
     pub config: Option<String>,
 
+    /// Username for wallhaven.cc
+    #[arg(long)]
+    pub username: Option<String>,
+
     /// API key from wallhaven.cc
     #[arg(long)]
     pub apikey: Option<String>,
