@@ -8,7 +8,7 @@ pub struct Flags {
     #[arg(long)]
     pub config: Option<String>,
 
-    /// API key
+    /// API key from wallhaven.cc
     #[arg(long)]
     pub apikey: Option<String>,
 
@@ -20,18 +20,19 @@ pub struct Flags {
     #[arg(short, long)]
     pub random: Option<String>,
 
-    /// Query to search for random wallpaper
+    /// Select random image from toplist
     #[arg(short, long)]
     pub toplist: bool,
 
-    /// Query to search for random wallpaper
+    /// Select random image from hot
     #[arg(long)]
     pub hot: bool,
 
+    /// Set purity filter as bits (sfw|sketchy|nsfw) eg. 110 = sfw & sketchy
     #[arg(short, long, value_parser = check3bit)]
     pub purity: Option<String>,
 
-    /// Categories to search from (general|anime|people) or binary flags
+    /// Set category filter as bits (general|anime|people) eg. 101 = general & people
     #[arg(long, alias = "cat", value_parser = check3bit)]
     pub categories: Option<String>,
 
@@ -39,6 +40,7 @@ pub struct Flags {
     #[arg(short, long)]
     pub expiry: Option<i64>,
 
+    /// Script to pass selected file to (set wallpaper etc.)
     #[arg(long)]
     pub script: Option<String>,
 
