@@ -27,12 +27,11 @@ pub struct Flags {
     #[arg(long)]
     pub hot: bool,
 
-    /// Purity (sfw|sketchy|nsfw) or binary flags
-    #[arg(short, long)]
+    #[arg(short, long, value_parser = check3bit)]
     pub purity: Option<String>,
 
     /// Categories to search from (general|anime|people) or binary flags
-    #[arg(long, alias = "cat")]
+    #[arg(long, alias = "cat", value_parser = check3bit)]
     pub categories: Option<String>,
 
     /// Time in seconds to use cache file before requery of wallhaven.cc
@@ -59,4 +58,12 @@ pub struct Flags {
 pub fn cli_args() -> Flags {
     let flags = Flags::parse();
     return flags;
+}
+
+pub fn check3bit(bits: &str) -> Result<String, String> {
+    if bits.len() == 3 && bits.chars().all(|c| c == '0' || c == '1') {
+        return Ok(bits.to_string());
+    } else {
+        return Err(format!("should be bits e.g. 110"));
+    }
 }

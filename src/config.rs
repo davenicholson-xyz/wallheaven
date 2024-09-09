@@ -14,7 +14,7 @@ pub static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| {
     let mut config = Config::builder()
         .set_default("expiry", 600)
         .unwrap()
-        .set_default("purity", "100".to_string())
+        .set_default("purity", "110".to_string())
         .unwrap()
         .set_default("categories".to_string(), "111".to_string())
         .unwrap()

@@ -63,10 +63,10 @@ fn fetch_query(sorting: Sorting) -> Result<Vec<String>> {
         .append_pair("ratios", &config.get_string("ratios")?)
         .append_pair("sorting", sorting.param().as_ref());
 
-    //TODO: If apikey then set apkey
-    //if let Some(apikey) = settings.get("apikey") {
-    //    url.query_pairs_mut().append_pair("apikey", apikey);
-    //}
+    let apikey = config.get_string("apikey");
+    if apikey.is_ok() {
+        url.query_pairs_mut().append_pair("apikey", &apikey?);
+    }
 
     if sorting == Sorting::Random {
         let q = flags.random.unwrap();
