@@ -25,9 +25,14 @@ pub static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| {
         .set_default("range".to_string(), "1M".to_string())
         .unwrap()
         .set_default("ratios".to_string(), "landscape".to_string())
-        .unwrap()
-        .add_source(config::File::with_name(&cfg_path))
-        .add_source(config::Environment::with_prefix("WALLHEAVEN"));
+        .unwrap();
+
+    let path = std::path::PathBuf::from(&cfg_path);
+    if path.exists() {
+        config = config.add_source(config::File::with_name(&cfg_path));
+    }
+
+    config = config.add_source(config::Environment::with_prefix("WALLHEAVEN"));
 
     if let Some(pages) = flags.pages {
         config = config.set_override("pages", pages).unwrap();
