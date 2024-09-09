@@ -12,6 +12,8 @@ pub static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| {
     let cfg_path = flags_config.unwrap_or(default_config_path);
 
     let mut config = Config::builder()
+        .set_default("pages", 3)
+        .unwrap()
         .set_default("expiry", 600)
         .unwrap()
         .set_default("purity", "110".to_string())
@@ -26,6 +28,10 @@ pub static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| {
         .unwrap()
         .add_source(config::File::with_name(&cfg_path))
         .add_source(config::Environment::with_prefix("WALLHEAVEN"));
+
+    if let Some(pages) = flags.pages {
+        config = config.set_override("pages", pages).unwrap();
+    }
 
     if let Some(expiry) = flags.expiry {
         config = config.set_override("expiry", expiry).unwrap();

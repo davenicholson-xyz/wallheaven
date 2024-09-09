@@ -36,6 +36,10 @@ pub struct Flags {
     #[arg(long, alias = "cat", value_parser = check3bit)]
     pub categories: Option<String>,
 
+    /// Pages to search for random image (higher = slower) max: 10
+    #[arg(long, value_parser = clap::value_parser!(i64).range(1..11))]
+    pub pages: Option<i64>,
+
     /// Time in seconds to use cache file before requery of wallhaven.cc
     #[arg(short, long)]
     pub expiry: Option<i64>,
@@ -67,5 +71,13 @@ pub fn check3bit(bits: &str) -> Result<String, String> {
         return Ok(bits.to_string());
     } else {
         return Err(format!("should be bits e.g. 110"));
+    }
+}
+
+pub fn max10(n: i32) -> Result<i32, String> {
+    if n > 10 {
+        return Err(format!("maximum of 10"));
+    } else {
+        return Ok(n);
     }
 }
