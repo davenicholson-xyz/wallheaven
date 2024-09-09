@@ -51,5 +51,9 @@ pub static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| {
         config = config.set_override("random", random).unwrap();
     }
 
+    if let Some(script) = flags.script {
+        config = config.set_override("post_script", script).unwrap();
+    }
+
     Mutex::new(config.build().unwrap())
 });

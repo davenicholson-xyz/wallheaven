@@ -156,8 +156,9 @@ fn get_collection_id(label: &str) -> Result<u32> {
         collections = collection_to_tuple_pairs(collections_list)?;
     }
 
-    let id = find_id_by_label(&collections, label)
-        .ok_or(anyhow!(CustomError::new("Could not find collection id")))?;
+    let id = find_id_by_label(&collections, label).ok_or(anyhow!(CustomError::new(
+        "Could not find collection with that name"
+    )))?;
 
     Ok(id)
 }

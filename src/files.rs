@@ -1,7 +1,9 @@
+use crate::config;
 use reqwest::blocking::get;
 use std::fs::{self, File};
 use std::io::{self, copy, Write};
 use std::path::Path;
+use std::process::Command;
 use std::{env, path::PathBuf};
 use url::Url;
 
@@ -104,6 +106,8 @@ pub fn get_wpid(image_url: &str) -> String {
 }
 
 pub fn set_wallpaper(image_url: &str) -> Result<String> {
+    let config = config::CONFIG.lock().unwrap();
+
     let filename = filename_from_url(image_url);
     let mut fname = cache_dir_path().clone();
     fname.push(filename);
@@ -119,5 +123,14 @@ pub fn set_wallpaper(image_url: &str) -> Result<String> {
     let wpid = get_wpid(image_url);
     writeln!(current, "https://wallhaven.cc/w/{}", wpid)?;
 
-    Ok(fname.display().to_string())
+    let post_script = config.get_string("post_script");
+    if post_script.is_ok() {
+        Command::new(post_script.unwrap())
+            .arg(fname.display().to_string())
+            .output()
+            .expect("Unable to call external script");
+        Ok("".to_string())
+    } else {
+        Ok(fname.display().to_string())
+    }
 }

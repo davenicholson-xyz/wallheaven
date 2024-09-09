@@ -2,6 +2,7 @@ use clap::Parser;
 
 /// Wallpaper fetcher for wallhaven.cc
 #[derive(Parser, Debug)]
+#[command(version, about)]
 pub struct Flags {
     /// Config file to use
     #[arg(long)]
@@ -38,9 +39,8 @@ pub struct Flags {
     #[arg(short, long)]
     pub expiry: Option<i64>,
 
-    /// Update collection from last search to minimise api calls
-    #[arg(long = "from-cache")]
-    pub from_cache: bool,
+    #[arg(long)]
+    pub script: Option<String>,
 
     /// Returns the path to the current set wallpaper
     #[arg(short, long = "file")]
