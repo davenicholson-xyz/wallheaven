@@ -211,8 +211,12 @@ fn fetch_collections_data() -> Result<Vec<String>> {
 
 fn fetch_json_string(url: &str) -> Result<String> {
     let client = reqwest::blocking::Client::new();
-    let response = client.get(url).send()?.text()?;
-    Ok(response)
+    let response = client.get(url).send()?;
+    if response.status().is_success() {
+        return Ok(response.text()?);
+    } else {
+        Err(anyhow!("Check api key"))
+    }
 }
 
 fn fetch_query_page(mut url: url::Url, page: u32) -> Result<Vec<String>> {
