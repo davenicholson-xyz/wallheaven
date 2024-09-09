@@ -22,7 +22,7 @@ pub static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| {
         .unwrap()
         .set_default("pages".to_string(), 5)
         .unwrap()
-        .set_default("toprange".to_string(), "1M".to_string())
+        .set_default("range".to_string(), "1M".to_string())
         .unwrap()
         .set_default("ratios".to_string(), "landscape".to_string())
         .unwrap()
@@ -63,6 +63,10 @@ pub static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| {
 
     if let Some(script) = flags.script {
         config = config.set_override("post_script", script).unwrap();
+    }
+
+    if let Some(range) = flags.range {
+        config = config.set_override("range", range).unwrap();
     }
 
     Mutex::new(config.build().unwrap())

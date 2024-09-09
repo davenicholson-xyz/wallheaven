@@ -28,6 +28,10 @@ pub struct Flags {
     #[arg(short, long)]
     pub toplist: bool,
 
+    /// Time range to search toplist (1d|3d|1w|1M|3M|6M|1y)
+    #[arg(long)]
+    pub range: Option<String>,
+
     /// Select random image from hot
     #[arg(long)]
     pub hot: bool,
