@@ -11,7 +11,6 @@ url = "2.5.2"
 config = "0.14.0"
 field_accessor = "0.5.2"
 serde = { version = "1.0.209", features = ["derive"] }
-lazy_static = "1.5.0"
 serde_json = "1.0.127"
 rand = "0.8.5"
 anyhow = "1.0.86"
