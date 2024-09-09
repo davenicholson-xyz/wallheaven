@@ -73,11 +73,3 @@ pub fn check3bit(bits: &str) -> Result<String, String> {
         return Err(format!("should be bits e.g. 110"));
     }
 }
-
-pub fn max10(n: i32) -> Result<i32, String> {
-    if n > 10 {
-        return Err(format!("maximum of 10"));
-    } else {
-        return Ok(n);
-    }
-}
