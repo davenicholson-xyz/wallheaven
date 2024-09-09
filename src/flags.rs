@@ -13,11 +13,11 @@ pub struct Flags {
     pub apikey: Option<String>,
 
     /// Specify the collection name to fetch wallpaper from (requires username and apikey)
-    #[arg(short, long, conflicts_with = "random")]
+    #[arg(short, long, conflicts_with_all = ["random", "toplist", "hot"])]
     pub collection: Option<String>,
 
     /// Query to search for random wallpaper
-    #[arg(short, long)]
+    #[arg(short, long, conflicts_with_all = ["collection", "toplist", "hot"])]
     pub random: Option<String>,
 
     /// Select random image from toplist
