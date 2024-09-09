@@ -40,8 +40,8 @@ pub struct Flags {
     #[arg(short, long)]
     pub expiry: Option<i64>,
 
-    /// Script to pass selected file to (set wallpaper etc.)
-    #[arg(long)]
+    /// External script to pass selected file to (set wallpaper etc.)
+    #[arg(short, long)]
     pub script: Option<String>,
 
     /// Returns the path to the current set wallpaper
@@ -52,7 +52,7 @@ pub struct Flags {
     #[arg(short, long = "url")]
     pub url: bool,
 
-    /// Deletes wallpaper cache files
+    /// Deletes wallpaper cache folder
     #[arg(short, long)]
     pub delete: bool,
 }
