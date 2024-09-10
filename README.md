@@ -16,7 +16,7 @@ _coming soon_
 
 Configuration is stored in `$HOME/.config/wallheaven/config.toml` on linux/mac or `%appdata%/Roaming/wallheaven/config.tml` on Windows. Wallheaven's defaults will be overwritten by these options, which in turn will be overwritten by any environment variables set preceeded with WALLHEAVEN_. These can then be overridden with any command line flags.
 
-An example `config.toml` is in this [here](http://github.com)
+An example `config.toml` is in this [here](https://github.com/davenicholson-xyz/wallheaven/blob/main/examples/config.toml)
 
 ---
 
