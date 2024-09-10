@@ -6,6 +6,7 @@ authors=["Dave Nicholson <me@davenicholson.xyz>"]
 homepage = "https://github.com/davenicholson-xyz/wallheaven"
 repository = "https://github.com/davenicholson-xyz/wallheaven"
 description = "Random image fetcher for wallhaven.cc"
+license = "MIT"
 
 [package.metadata.wix]
 upgrade-guid = "DF7698BC-B1BB-4CE7-A138-2BA82B613134"
