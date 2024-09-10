@@ -1,6 +1,3 @@
-# Wallheaven - Fetch random wallpapers from wallhaven.cc
+## Wallheaven - Random wallpaper fetcher from wallhaven.cc
 
 
-
-
-```
