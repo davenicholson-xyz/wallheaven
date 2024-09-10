@@ -1,4 +1,4 @@
-## 🌆 Wallheaven - Random wallpaper fetcher from wallhaven.cc
+## 🌆 Wallheaven - Random wallpaper fetcher for wallhaven.cc
 
 Wallheaven is a Rust powered CLI tool for fetching random wallpapers from [wallhaven.cc](https://wallhaven.cc/). Wallheaven will randomly choose a wallpaper from various lists including your own collections using your API key. The selected wallpaper will then be downloaded and will output the filepath. Alternatively if a script is provided then the script will be called with the filepath.
 
@@ -8,7 +8,7 @@ All queries and selected wallpapers are cached to cut down on API calls.
 
 ### Installation
 
-_install instructions here_
+_coming soon_
 
 ---
 
@@ -93,4 +93,6 @@ Version info
 ---
 
 ## Setting wallpaper with external script
+
+_coming soon_
 
