@@ -2,6 +2,8 @@
 
 Wallheaven is a Rust powered CLI tool for fetching random wallpapers from [wallhaven.cc](https://wallhaven.cc/). Wallheaven will randomly choose a wallpaper from various lists including your own collections using your API key. The selected wallpaper will then be downloaded and will output the filepath. Alternatively if a script is provided then the script will be called with the filepath.
 
+All queries and selected wallpapers are cached to cut down on API calls. 
+
 ### Installation
 
 _install instructions here_
@@ -13,6 +15,17 @@ Configuration is stored in `$HOME/.config/wallheaven/config.toml` on linux/mac o
 An example `config.toml` is in this [here](http://github.com)
 
 ### Usage
+
+Call the `wallheaven` command and select an option to retrieve a random wallpaper.
+
+`wallheaven -c collection_name` will select a wallpaper from your collection with that name. Include your username and API key in the congig/flags.
+
+`wallheaven -r search_term` will return wallpapers from that query. 
+
+`wallheaven -t` to get a random wallpaper from the toplist. Pass a range option to search time range `--range 1w` will search the toplist for the past week.
+
+`wallheaven --hot` will get wallpapers from the hottest wallpapers list.
+
 
 ### Command line flags
 
