@@ -2,6 +2,16 @@
 name = "wallheaven"
 version = "0.1.1"
 edition = "2021"
+authors=["Dave Nicholson <me@davenicholson.xyz>"]
+homepage = "https://github.com/davenicholson-xyz/wallheaven"
+repository = "https://github.com/davenicholson-xyz/wallheaven"
+description = "Random image fetcher for wallhaven.cc"
+
+[package.metadata.wix]
+upgrade-guid = "DF7698BC-B1BB-4CE7-A138-2BA82B613134"
+path-guid = "80955291-1670-4D5B-BD30-02793BFD000C"
+license = false
+eula = false
 
 [dependencies]
 clap = { version = "4.5.16", features = ["derive"] }
@@ -28,7 +38,7 @@ cargo-dist-version = "0.22.1"
 # CI backends to support
 ci = "github"
 # The installers to generate for each app
-installers = ["shell", "homebrew", "msi"]
+installers = ["shell", "homebrew"]
 # Target platforms to build apps for (Rust target-triple syntax)
 targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-pc-windows-msvc"]
 # Path that installers should place binaries in
