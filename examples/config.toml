@@ -1,0 +1,8 @@
+username="your_usrname"
+apikey="your_apikey" # find it here https://wallhaven.cc/settings/account
+purity="110"
+categories="111"
+range="1M"
+expiry=600
+post_script="set_wallpaper_script" # script to run with selected wallpaper
+

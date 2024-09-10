@@ -215,6 +215,7 @@ fn fetch_json_string(url: &str) -> Result<String> {
     if response.status().is_success() {
         return Ok(response.text()?);
     } else {
+        //TODO: Check return error. Maybe api fault
         Err(anyhow!("Check api key"))
     }
 }
