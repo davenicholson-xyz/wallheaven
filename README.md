@@ -14,16 +14,18 @@ An example `config.toml` is in this [here](http://github.com)
 
 ### Usage
 
-| Flag | Description | Example |
-| --- | --- | --- |
-| `--config` | Location of the config file to override default location ||
-| `--username` | wallhaven username used for selecting from users collection ||
-| `--apikey` | wallhaven api key used for accessing nsfw images ||
-| `-c --collection` | Name of your collection to choose wallpaper from |  |
-| `-r --random` | Search term for random wallpaper | |
-| `-t --toplist` | Random image from popular wallpapers | |
-| `--range` | Period to select toplist images from ||
-| `--hot` | Random image from popular images right now | |
-| `-p --purity` | Turn purity[sfw/sketchy/nsfw] on(1) or off(0) with bits. API key required for SNFW images | `-p 110` _sfw & sketchy_ |
+#### Command line flags
+
+### `--config`
+This is the config file ...
+
+### `--username`
+wallhaven.cc username
+
+### `--apikey`
+wallhaven.cc apikey
+
+### `-c --collection`
+name of collection
 
 
