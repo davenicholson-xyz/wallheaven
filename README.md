@@ -96,5 +96,10 @@ Version info
 
 ## Setting wallpaper with external script
 
-_coming soon_
+The wallheaven app only spits out the location of the selected wallpaper on your drive (the cache folder). To set the wallpaper you will need to pass it to whichever program you are using to set wallpaper on your OS. This can either be done by setting the `post_script` option in `config.toml` to the script you wish to set the wallpaper (`post_script="swww img`) or you can set the `-s --script` flag (`wallheaven -t -s "swww img`)
 
+You can also just pipe the output directly into a script.
+
+`wallheaven -t | swww img` for example. Or if it does not allow piping `feh --bg-fill ${wallhaven -t)`
+
+Mac and Windows will require a slightly different approach but Google is your friend.
