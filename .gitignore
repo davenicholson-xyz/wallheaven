@@ -1,4 +1,8 @@
 /target
 .DS_Store
 todo.txt
+*.tar.xz
+*.tar.zst
+/build
+/pkg
 

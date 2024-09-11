@@ -8,26 +8,16 @@ url='https://github.com/davenicholson-xyz/wallhaven'
 license=('MIT')
 makedepends=(cargo)
 depends=()
-arch=('i686' 'x86_64' 'armv6h' 'armv7h')
-source=("https://github.com/davenicholson-xyz/$pkgname/releases/download/v$pkgver/source.tar.gz")
-sha256sums=('e82993b3890011027c181e7d6a48f7a0b0f63b3699ae9a958130c0608e0c717e')
-
-prepare() {
-  export RUSTUP_TOOLCHAIN=stable
-  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
-}
+arch=('x86_64')
+source=("https://github.com/davenicholson-xyz/$pkgname/releases/download/v$pkgver/wallheaven-x86_64-unknown-linux-gnu.tar.xz")
+noextract=("$pkgname-x86_64-unknown-linux-gnu.tar.xz")
+sha256sums=("3ca79f8de657643232cc7d3b6ab59d14ec1b146e4060d7c729442a049d6f800d")
 
 build() {
-  export RUSTUP_TOOLCHAIN=stable
-  export CARGO_TARGET_DIR=target
-  cargo build --frozen --release --all-features
+  mkdir -p "$srcdir/../build"
+  tar -xvf "$srcdir/../$pkgname-x86_64-unknown-linux-gnu.tar.xz" --strip-components=1 -C "$srcdir/../build"
 }
 
-# check() {
-#   export RUSTUP_TOOLCHAIN=stable
-#   cargo test --frozen --all-features
-# }
-
 package() {
-  install -Dm0755 -t "$pkgdir/usr/bin/" "target/release/$pkgname"
+  install -Dm0755 -t "$pkgdir/usr/bin/" "$srcdir/../build/$pkgname"
 }
