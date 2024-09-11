@@ -101,7 +101,7 @@ Version info
 
 ## Setting wallpaper with external script
 
-The wallheaven app only spits out the location of the selected wallpaper on your drive (the cache folder). To set the wallpaper you will need to pass it to whichever program you are using to set wallpaper on your OS. This can either be done by setting the `post_script` option in `config.toml` to the script you wish to set the wallpaper (`post_script="swww img`) or you can set the `-s --script` flag (`wallheaven -t -s "swww img`)
+The wallheaven app only spits out the location of the selected wallpaper on your drive (the cache folder). To set the wallpaper you will need to pass it to whichever program you are using to set wallpaper on your OS. This can either be done by setting the `post_script` option in `config.toml` to the script you wish to set the wallpaper (`post_script="swww img"`) or you can set the `-s --script` flag (`wallheaven -t -s "swww img`)
 
 You can also just pipe the output directly into a script.
 
