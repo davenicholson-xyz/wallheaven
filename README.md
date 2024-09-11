@@ -8,9 +8,14 @@ All queries and selected wallpapers are cached to cut down on API calls.
 
 ### Installation
 
+Cargo
 `cargo install wallheaven`
 
-Check out the [latest release](https://github.com/davenicholson-xyz/wallheaven/releases)
+Arch (AUR) 
+`yay -S wallheaven`
+
+
+Download and install/build from the [latest release](https://github.com/davenicholson-xyz/wallheaven/releases)
 
 ---
 
