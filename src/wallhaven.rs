@@ -5,7 +5,6 @@ use crate::flags;
 use crate::structs::{CollectionData, CollectionMeta, CollectionsData, PageData};
 use crate::{config, files, utils};
 use anyhow::{anyhow, Result};
-use rand::distributions::Standard;
 use url::Url;
 
 const API_URL: &str = "https://wallhaven.cc/api/v1";
