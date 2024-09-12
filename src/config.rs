@@ -29,7 +29,7 @@ pub static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| {
         if cfg_path.exists() {
             config = config.add_source(config::File::with_name(&flags_config));
         } else {
-            panic!("FIle Error: Cannot find configuration file");
+            panic!("File Error: Cannot find configuration file");
         }
     } else {
         let default_config_path = files::config_file_string();
