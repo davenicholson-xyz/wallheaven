@@ -2,14 +2,11 @@ use crate::files;
 use crate::flags;
 use config::Config;
 use once_cell::sync::Lazy;
+use std::path::PathBuf;
 use std::sync::Mutex;
 
 pub static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| {
     let flags = flags::cli_args();
-
-    let default_config_path = files::config_file_string();
-    let flags_config = flags.config.clone();
-    let cfg_path = flags_config.unwrap_or(default_config_path);
 
     let mut config = Config::builder()
         .set_default("pages", 3)
@@ -27,9 +24,16 @@ pub static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| {
         .set_default("ratios".to_string(), "landscape".to_string())
         .unwrap();
 
-    let path = std::path::PathBuf::from(&cfg_path);
-    if path.exists() {
-        config = config.add_source(config::File::with_name(&cfg_path));
+    if let Some(flags_config) = flags.config {
+        let cfg_path = PathBuf::from(&flags_config);
+        if cfg_path.exists() {
+            config = config.add_source(config::File::with_name(&flags_config));
+        } else {
+            panic!("FIle Error: Cannot find configuration file");
+        }
+    } else {
+        let default_config_path = files::config_file_string();
+        config = config.add_source(config::File::with_name(&default_config_path));
     }
 
     config = config.add_source(config::Environment::with_prefix("WALLHEAVEN"));
