@@ -5,6 +5,7 @@ use crate::flags;
 use crate::structs::{CollectionData, CollectionMeta, CollectionsData, PageData};
 use crate::{config, files, utils};
 use anyhow::{anyhow, Result};
+use rand::distributions::Standard;
 use url::Url;
 
 const API_URL: &str = "https://wallhaven.cc/api/v1";
@@ -212,8 +213,17 @@ fn fetch_collections_data() -> Result<Vec<String>> {
 fn fetch_json_string(url: &str) -> Result<String> {
     let client = reqwest::blocking::Client::new();
     let response = client.get(url).send()?;
-    let response = response.error_for_status()?;
-    Ok(response.text()?)
+    let status = response.status();
+    if status.is_success() {
+        Ok(response.text()?)
+    } else {
+        let msg = match status {
+            reqwest::StatusCode::UNAUTHORIZED => "Unauthorised - check API key",
+            reqwest::StatusCode::TOO_MANY_REQUESTS => "Too many requests",
+            _ => "Please try again",
+        };
+        Err(anyhow!(msg))
+    }
 }
 
 fn fetch_query_page(mut url: url::Url, page: u32) -> Result<Vec<String>> {
