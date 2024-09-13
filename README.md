@@ -17,6 +17,7 @@ Arch (AUR)
 
 Download and install/build from the [latest release](https://github.com/davenicholson-xyz/wallheaven/releases)
 
+
 ---
 
 ### Configuration 
