@@ -1,7 +1,7 @@
 use crate::config;
 use reqwest::blocking::get;
 use std::fs::{self, File};
-use std::io::{self, copy, Write};
+use std::io::{self, copy, LineWriter, Write};
 use std::path::Path;
 use std::process::Command;
 use std::{env, path::PathBuf};
@@ -72,6 +72,16 @@ pub fn check_or_create_dir(path: PathBuf) {
     if !(path.exists()) {
         _ = fs::create_dir_all(path);
     }
+}
+
+pub fn cache_last_query(query: &str) -> Result<()> {
+    check_or_create_dir(cache_dir_path());
+    let mut cache = cache_dir_path().clone();
+    cache.push(".last_query");
+    let file = File::create(cache)?;
+    let mut file = LineWriter::new(file);
+    file.write_all(query.as_bytes())?;
+    Ok(())
 }
 
 pub fn vec_to_cache(v: &Vec<String>, filename: &str) -> io::Result<()> {
