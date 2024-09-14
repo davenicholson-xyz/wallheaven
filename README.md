@@ -16,7 +16,6 @@ Arch (AUR)
 
 
 Download and install/build from the [latest release](https://github.com/davenicholson-xyz/wallheaven/releases)
-
 ---
 
 ### Configuration 
@@ -87,6 +86,9 @@ Returns the current file path of the last wallpaper set with wallhwaven
 
 #### `-u --url`
 Return the wallhaven.cc link to the last wallpaper set with wallheaven
+
+### -l --last
+Returns the last query made with --random
 
 #### `-d --delete`
 Deletes cache files
