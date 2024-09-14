@@ -54,6 +54,12 @@ fn main() -> Result<()> {
         return Ok(());
     }
 
+    if flags.last {
+        let last = files::fetch_last_query()?;
+        println!("{}", &last);
+        return Ok(());
+    }
+
     if flags.delete {
         let cache_path = files::cache_dir_path();
         fs::remove_dir_all(cache_path)?;

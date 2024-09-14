@@ -64,6 +64,10 @@ pub struct Flags {
     #[arg(short, long = "url")]
     pub url: bool,
 
+    /// Return the last search query made with random
+    #[arg(short, long)]
+    pub last: bool,
+
     /// Deletes wallpaper cache folder
     #[arg(short, long)]
     pub delete: bool,

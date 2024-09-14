@@ -1,7 +1,7 @@
 use crate::config;
 use reqwest::blocking::get;
 use std::fs::{self, File};
-use std::io::{self, copy, LineWriter, Write};
+use std::io::{self, copy, BufRead, LineWriter, Write};
 use std::path::Path;
 use std::process::Command;
 use std::{env, path::PathBuf};
@@ -82,6 +82,16 @@ pub fn cache_last_query(query: &str) -> Result<()> {
     let mut file = LineWriter::new(file);
     file.write_all(query.as_bytes())?;
     Ok(())
+}
+
+pub fn fetch_last_query() -> Result<String> {
+    let mut cache = cache_dir_path().clone();
+    cache.push(".last_query");
+    let file = File::open(cache)?;
+    let mut reader = io::BufReader::new(file);
+    let mut query = String::new();
+    reader.read_line(&mut query)?;
+    Ok(query.trim().to_string())
 }
 
 pub fn vec_to_cache(v: &Vec<String>, filename: &str) -> io::Result<()> {
