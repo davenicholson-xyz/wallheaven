@@ -33,7 +33,10 @@ pub static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| {
         }
     } else {
         let default_config_path = files::config_file_string();
-        config = config.add_source(config::File::with_name(&default_config_path));
+        let cfg_path = PathBuf::from(&default_config_path);
+        if cfg_path.exists() {
+            config = config.add_source(config::File::with_name(&default_config_path));
+        }
     }
 
     config = config.add_source(config::Environment::with_prefix("WALLHEAVEN"));
