@@ -107,6 +107,6 @@ The wallheaven app only spits out the location of the selected wallpaper on your
 
 You can also just pipe the output directly into a script.
 
-`wallheaven -t | swww img` for example. Or if it does not allow piping `feh --bg-fill ${wallhaven -t)`
+`wallheaven -t | swww img` for example. Or if it does not allow piping `feh --bg-fill $(wallhaven -t)`
 
 Mac and Windows will require a slightly different approach but Google is your friend.
