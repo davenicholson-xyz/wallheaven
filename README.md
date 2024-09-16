@@ -87,7 +87,7 @@ Returns the current file path of the last wallpaper set with wallhwaven
 #### `-u --url`
 Return the wallhaven.cc link to the last wallpaper set with wallheaven
 
-### -l --last
+#### `-l --last`
 Returns the last query made with --random
 
 #### `-d --delete`
