@@ -72,7 +72,7 @@ Bits representing (sfw/sketchy/nsfw). Turn purities on(1) or off(0). NSFW requir
 #### `--categories [100,001,101 etc]` - Default `111`
 Bits representing categories to search from (general/anime/people). Turn categories on(1) or off (0). Example: `--categories 101` will not show anime images
 
-#### `--pages[1 - 10]` - Default `3`
+#### `--pages [1 - 10]` - Default `3`
 Amount of pages to search for random toplist/hot image. Higher number = more API calls so slower. 
 
 #### `-e --expiry [number]` - Default `600`
