@@ -66,7 +66,7 @@ The time range to select toplist wallpaper from. Default to `1M`
 #### `--hot`
 Choose a random wallpaper from the most popular wallpapers right now!
 
-#### `-i --id [wallheaven id]`
+#### `-i --id [wallhaven id]`
 Sets wallpaper using the wallhaven.cc wallpaper ID
 
 #### `-p --purity [100,001,101 etc]` - Default `110`
