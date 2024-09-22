@@ -17,15 +17,15 @@ pub struct Flags {
     pub apikey: Option<String>,
 
     /// Specify the collection name to fetch wallpaper from (requires username and apikey)
-    #[arg(short, long, conflicts_with_all = ["random", "toplist", "hot"])]
+    #[arg(short, long, conflicts_with_all = ["random", "toplist", "hot", "id"])]
     pub collection: Option<String>,
 
     /// Query to search for random wallpaper
-    #[arg(short, long, conflicts_with_all = ["collection", "toplist", "hot"])]
+    #[arg(short, long, conflicts_with_all = ["collection", "toplist", "hot", "id"])]
     pub random: Option<String>,
 
     /// Select random image from toplist
-    #[arg(short, long)]
+    #[arg(short, long, conflicts_with_all = ["collection", "hot", "id", "random"])]
     pub toplist: bool,
 
     /// Time range to search toplist (1d|3d|1w|1M|3M|6M|1y)
@@ -35,6 +35,10 @@ pub struct Flags {
     /// Select random image from hot
     #[arg(long)]
     pub hot: bool,
+
+    /// Set wallpaper by wallhaven id
+    #[arg(short, long, conflicts_with_all = ["collection", "toplist", "hot", "random"])]
+    pub id: Option<String>,
 
     /// Set purity filter as bits (sfw|sketchy|nsfw) eg. 110 = sfw & sketchy
     #[arg(short, long, value_parser = check3bit)]

@@ -1,6 +1,11 @@
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
+pub struct WallpaperData {
+    pub data: Wallpaper,
+}
+
+#[derive(Debug, Deserialize)]
 pub struct Wallpaper {
     pub path: String,
 }
