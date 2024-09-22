@@ -42,6 +42,12 @@ fn main() -> Result<()> {
         return Ok(());
     }
 
+    if flags.id.is_some() {
+        let wallpaper = wallhaven::by_id(&flags.id.unwrap())?;
+        files::set_wallpaper(&wallpaper)?;
+        return Ok(());
+    }
+
     if flags.file {
         let curr = files::cache_to_vec(".current");
         println!("{}", &curr[0].to_string());

@@ -2,7 +2,7 @@ use crate::enums::Sorting;
 use crate::errors::CustomError;
 use crate::files::{cache_to_vec, delete_if_older_than, vec_to_cache};
 use crate::flags;
-use crate::structs::{CollectionData, CollectionMeta, CollectionsData, PageData};
+use crate::structs::{CollectionData, CollectionMeta, CollectionsData, PageData, WallpaperData};
 use crate::{config, files, utils};
 use anyhow::{anyhow, Result};
 use url::Url;
@@ -50,6 +50,11 @@ pub fn collection(label: &str) -> Result<Vec<String>> {
     }
 }
 
+pub fn by_id(id: &str) -> Result<String> {
+    let wallpaper = fetch_by_id(id)?;
+    Ok(wallpaper)
+}
+
 fn fetch_query(sorting: Sorting) -> Result<Vec<String>> {
     let flags = flags::cli_args();
     let config = config::CONFIG.lock().unwrap();
@@ -88,6 +93,22 @@ fn fetch_query(sorting: Sorting) -> Result<Vec<String>> {
     } else {
         return Err(anyhow!(CustomError::new("No wallpapers found")));
     }
+}
+
+fn fetch_by_id(id: &str) -> Result<String> {
+    let config = config::CONFIG.lock().unwrap();
+
+    let mut url = Url::parse(API_URL).unwrap();
+    url.path_segments_mut().unwrap().push("w").push(id);
+
+    let apikey = config.get_string("apikey");
+    if apikey.is_ok() {
+        url.query_pairs_mut().append_pair("apikey", &apikey?);
+    }
+
+    let response = fetch_json_string(&url.as_str())?;
+    let wallpaper_data = serde_json::from_str::<WallpaperData>(&response)?;
+    Ok(wallpaper_data.data.path)
 }
 
 fn fetch_collection(id: u32) -> Result<Vec<String>> {
@@ -220,6 +241,7 @@ fn fetch_json_string(url: &str) -> Result<String> {
         let msg = match status {
             reqwest::StatusCode::UNAUTHORIZED => "Unauthorised - check API key",
             reqwest::StatusCode::TOO_MANY_REQUESTS => "Too many requests",
+            reqwest::StatusCode::NOT_FOUND => "Request not found",
             _ => "Please try again",
         };
         Err(anyhow!(msg))
