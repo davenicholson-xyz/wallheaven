@@ -66,6 +66,9 @@ The time range to select toplist wallpaper from. Default to `1M`
 #### `--hot`
 Choose a random wallpaper from the most popular wallpapers right now!
 
+#### `-i --id [wallheaven id]`
+Sets wallpaper using the wallhaven.cc wallpaper ID
+
 #### `-p --purity [100,001,101 etc]` - Default `110`
 Bits representing (sfw/sketchy/nsfw). Turn purities on(1) or off(0). NSFW requires a valid API key. Example: `-p 100` will only return SFW images. 
 
