@@ -145,10 +145,15 @@ pub fn set_wallpaper(image_url: &str) -> Result<()> {
 
     let post_script = config.get_string("post_script");
     if post_script.is_ok() {
-        Command::new(post_script.unwrap())
-            .arg(fname.display().to_string())
-            .output()
-            .expect("Unable to call external script");
+        let parsed_command =
+            shlex::split(&post_script.unwrap()).expect("Failed to parse external script");
+        if let Some((command, args)) = parsed_command.split_first() {
+            let _status = Command::new(command)
+                .args(args)
+                .arg(fname.display().to_string())
+                .status()
+                .expect("Failed to execute external script");
+        };
         Ok(())
     } else {
         println!("{}", fname.display().to_string());
