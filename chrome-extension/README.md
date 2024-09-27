@@ -1,1 +1,0 @@
-# wallheaven-extension
