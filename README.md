@@ -6,12 +6,13 @@ All queries and selected wallpapers are cached to cut down on API calls.
 
 ### New Chrome extension for wallhaven.cc
 
-You can now select a wallpaper straight from the wallhaven.cc website using the chrome-extension found in the [chrome extension folder](https://github.com/davenicholson-xyz/wallheaven/tree/main/chrome-extension). Download and install on the Chrome extensions page. 
-
-Once installed run the `wallheavend` daemon and a new button will appear on the wallpaper thumbnails and an extra button on the wallpaper info page.
+You can now select a wallpaper straight from the wallhaven.cc website using the chrome extension found in this repo. Download and install. Run the `wallheavend` daemon and a new button will appear on the wallpaper thumbnails and an extra button on the wallpaper info page.
 
 ![wallpaper thumbnail link](/assets/thumb_link.png)
+Wallpaper thumbnail link when hovering over thumbnails
+
 ![wallpaper info link](/assets/page_link.png)
+Sidebar link shown on wallpaper info page
 
 --- 
 
