@@ -10,6 +10,9 @@ You can now select a wallpaper straight from the wallhaven.cc website using the 
 
 Once installed run the `wallheavend` daemon and a new button will appear on the wallpaper thumbnails and an extra button on the wallpaper info page.
 
+![wallpaper thumbnail link](https://github.com/davenicholson-xyz/wallheaven/tree/main/assets/thumb_link.png)
+![wallpaper info link](https://github.com/davenicholson-xyz/wallheaven/tree/main/assets/page_link.png)
+
 --- 
 
 ### Installation
