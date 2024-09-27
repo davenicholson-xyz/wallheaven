@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', async function() {
   try {
     const response = await fetch("http://localhost:2388")
+    window.location.href = "found.html";
   } catch (e) {
-    const msg = document.querySelector("#message")
-    msg.innerText = "daemon not found..."
+    window.location.href = "not_found.html";
   }
 });

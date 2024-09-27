@@ -12,7 +12,7 @@
     "http://localhost/*"
   ],
   "action": {
-    "default_popup" : "popup.html"
+    "default_popup" : "default.html"
   },
 
   "content_scripts": [
