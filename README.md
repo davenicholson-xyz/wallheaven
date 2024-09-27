@@ -122,4 +122,5 @@ You can also just pipe the output directly into a script.
 
 `wallheaven -t | swww img` for example. Or if it does not allow piping `feh --bg-fill $(wallhaven -t)`
 
-Mac and Windows will require a slightly different approach but Google is your friend.
+An example script to set the wallpaper on both Linux and Mac can be found [here](/examples/setwallpaper.sh)
+
