@@ -25,8 +25,8 @@ fn main() {
         .route("/wp/:id", get(set_wallpaper))
         .route("/current", get(get_current))
         .layer(
-            // TODO: Allow from everywhere
             CorsLayer::new()
+                .allow_origin("http://localhost:2388".parse::<HeaderValue>().unwrap())
                 .allow_origin("https://wallhaven.cc".parse::<HeaderValue>().unwrap())
                 .allow_methods(Method::GET),
         );
