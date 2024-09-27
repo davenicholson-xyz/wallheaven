@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Sample script to set wallpaper on linux or mac
-#
+
 if [ -n "$1" ]; then
   IMG=$1
 else
