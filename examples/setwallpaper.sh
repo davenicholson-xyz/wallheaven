@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Sample script to set wallpaper on linux or mac
+#
 if [ -n "$1" ]; then
   IMG=$1
 else
@@ -13,6 +15,7 @@ if ! [[ $EXT =~ ^(jpg|jpeg|png)$ ]]; then
 fi
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  # edit the following command to set the wallpaper using your program of choice
   swww img $IMG
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   osascript -e "tell application \"Finder\" to set desktop picture to POSIX file \"$IMG\""
