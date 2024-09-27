@@ -4,6 +4,12 @@ Wallheaven is a CLI tool for fetching random wallpapers from [wallhaven.cc](http
 
 All queries and selected wallpapers are cached to cut down on API calls. 
 
+## New Feature
+
+You can now select a wallpaper straight from the wallhaven.cc website using the chrome-extension found in the [chrome extension folder](https://github.com/davenicholson-xyz/chrome-extension). Download and install on the Chrome extensions page. 
+
+Once installed run the `wallheavend` daemon and a new button will appear on the wallpaper thumbnails and an extra button on the wallpaper info page.
+
 --- 
 
 ### Installation
