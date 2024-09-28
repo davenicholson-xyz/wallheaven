@@ -25,7 +25,7 @@ eula = false
 [dependencies]
 clap = { version = "4.5.16", features = ["derive"] }
 dirs = "5.0.1"
-reqwest = { version = "0.12.7", features = ["blocking", "json"] }
+reqwest = { version = "0.12.7", features = ["blocking", "json", "rustls-tls"] }
 url = "2.5.2"
 config = "0.14.0"
 field_accessor = "0.5.2"

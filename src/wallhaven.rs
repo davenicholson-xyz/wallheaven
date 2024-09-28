@@ -232,8 +232,12 @@ fn fetch_collections_data() -> Result<Vec<String>> {
 }
 
 fn fetch_json_string(url: &str) -> Result<String> {
-    let client = reqwest::blocking::Client::new();
-    let response = client.get(url).send()?;
+    //let client = reqwest::blocking::Client::new();
+    let client = reqwest::blocking::Client::builder()
+        .use_rustls_tls()
+        .build()?;
+
+    let response = client.get(url).header("User-Agent", "Rust").send()?;
     let status = response.status();
     if status.is_success() {
         Ok(response.text()?)
