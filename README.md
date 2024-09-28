@@ -1,8 +1,18 @@
 ## 🌆 Wallheaven - Random wallpaper fetcher for wallhaven.cc
 
-Wallheaven is a CLI tool for fetching random wallpapers from [wallhaven.cc](https://wallhaven.cc/). Wallheaven will randomly choose a wallpaper from various lists including your own collections using your API key. The selected wallpaper will then be downloaded and will output the file path. Alternatively if a script is provided then the script will be called with the file path.
+Wallheaven is a CLI tool for fetching random wallpapers from [wallhaven.cc](https://wallhaven.cc/). Wallheaven will randomly choose a wallpaper from various lists including your own collections using your API key. The selected wallpaper will then be downloaded and will output the file path. Alternatively if a script is provided then the script will be called with the file path. [more info](https://github.com/davenicholson-xyz/wallheaven/tree/main?tab=readme-ov-file#setting-wallpaper-with-external-script)
 
 All queries and selected wallpapers are cached to cut down on API calls. 
+
+### New Chrome extension for wallhaven.cc
+
+You can now select a wallpaper straight from the wallhaven.cc website using the chrome extension found in this repo. Download and install. Run the `wallheavend` daemon and a new button will appear on the wallpaper thumbnails and an extra button on the wallpaper info page.
+
+![wallpaper thumbnail link](/assets/thumb_link.png)
+Wallpaper thumbnail link when hovering over thumbnails
+
+![wallpaper info link](/assets/page_link.png)
+Sidebar link shown on wallpaper info page
 
 --- 
 
@@ -14,8 +24,8 @@ Cargo
 Arch (AUR) 
 `yay -S wallheaven`
 
-
 Download and install/build from the [latest release](https://github.com/davenicholson-xyz/wallheaven/releases)
+
 ---
 
 ### Configuration 
@@ -112,4 +122,5 @@ You can also just pipe the output directly into a script.
 
 `wallheaven -t | swww img` for example. Or if it does not allow piping `feh --bg-fill $(wallhaven -t)`
 
-Mac and Windows will require a slightly different approach but Google is your friend.
+An example script to set the wallpaper on both Linux and Mac can be found [here](/examples/setwallpaper.sh)
+

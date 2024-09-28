@@ -1,0 +1,14 @@
+.thumb-btn-wallheaven {
+  left: -.5em;
+  color: white;
+  background: #72A0C1 !important;
+}
+
+.thumb-btn-wallheaven:hover {
+  background: #B0C4DE !important;
+  cursor: pointer;
+}
+
+.btn-set-wallpaper i {
+  padding-right: 5px;
+}

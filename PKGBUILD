@@ -19,5 +19,6 @@ build() {
 }
 
 package() {
-  install -Dm0755 -t "$pkgdir/usr/bin/" "$srcdir/../build/$pkgname"
+  install -Dm0755 -t "$pkgdir/usr/bin/" "$srcdir/../build/wallheaven"
+  install -Dm0755 -t "$pkgdir/usr/bin/" "$srcdir/../build/wallheavend"
 }

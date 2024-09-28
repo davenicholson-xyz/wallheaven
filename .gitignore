@@ -6,4 +6,5 @@ todo.txt
 /build
 /pkg
 .SRCINFO
+*.pem
 

@@ -1,12 +1,20 @@
 [package]
 name = "wallheaven"
-version = "0.1.6"
+version = "0.2.0"
 edition = "2021"
 authors=["Dave Nicholson <me@davenicholson.xyz>"]
 homepage = "https://github.com/davenicholson-xyz/wallheaven"
 repository = "https://github.com/davenicholson-xyz/wallheaven"
 description = "Random image fetcher for wallhaven.cc"
 license = "MIT"
+
+[[bin]]
+name = "wallheaven"
+path = "src/main.rs"
+
+[[bin]]
+name = "wallheavend"
+path = "src/wallheavend.rs"
 
 [package.metadata.wix]
 upgrade-guid = "DF7698BC-B1BB-4CE7-A138-2BA82B613134"
@@ -27,6 +35,10 @@ rand = "0.8.5"
 anyhow = "1.0.86"
 once_cell = "1.19.0"
 shlex = "1.3.0"
+axum = "0.7.6"
+daemonize = "0.5.0"
+tokio = { version = "1.40.0", features = ["full"] }
+tower-http = { version = "0.5.0", features = ["cors"] }
 
 # The profile that 'cargo dist' will build with
 [profile.dist]
