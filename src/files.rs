@@ -1,5 +1,4 @@
 use crate::config;
-use reqwest::blocking::get;
 use std::fs::{self, File};
 use std::io::{self, copy, BufRead, LineWriter, Write};
 use std::path::Path;
@@ -62,10 +61,15 @@ pub fn filename_from_url(url_str: &str) -> String {
     return format!("{}", filename);
 }
 
-pub fn download_image(image_url: &str, filename: &PathBuf) {
-    let mut response = get(image_url).expect("Failed to download image");
+pub fn download_image(image_url: &str, filename: &PathBuf) -> Result<()> {
+    let client = reqwest::blocking::Client::builder()
+        .use_rustls_tls()
+        .build()?;
+
+    let mut response = client.get(image_url).header("User-Agent", "Rust").send()?;
     let mut file = File::create(filename).expect("Failed to create file");
     copy(&mut response, &mut file).expect("Failed to save the file");
+    Ok(())
 }
 
 pub fn check_or_create_dir(path: PathBuf) {
@@ -133,7 +137,7 @@ pub fn set_wallpaper(image_url: &str) -> Result<()> {
     fname.push(filename);
 
     if !(fname.exists()) {
-        download_image(image_url, &fname);
+        download_image(image_url, &fname)?;
     }
 
     let mut current_file = cache_dir_path().clone();
