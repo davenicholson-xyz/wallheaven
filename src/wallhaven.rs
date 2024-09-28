@@ -233,7 +233,12 @@ fn fetch_collections_data() -> Result<Vec<String>> {
 
 fn fetch_json_string(url: &str) -> Result<String> {
     let client = reqwest::blocking::Client::new();
-    let response = client.get(url).send()?;
+
+    let mut headers = reqwest::header::HeaderMap::new();
+    headers.insert("authorization", "<authorization>".parse().unwrap());
+    headers.insert("user-agent", "CUSTOM_NAME/1.0".parse().unwrap());
+
+    let response = client.get(url).headers(headers).send()?;
     let status = response.status();
     if status.is_success() {
         Ok(response.text()?)

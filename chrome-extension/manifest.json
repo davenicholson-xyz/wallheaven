@@ -3,10 +3,6 @@
   "name": "Wallheaven",
   "description": "Adds a button to wallhaven.cc thumbnails to set the wallpaper with the wallheaven app",
   "version": "1.0", 
-  "permissions": [
-    "activeTab",
-    "scripting"
-  ],
   "host_permissions": [
     "http://127.0.0.1/*",
     "http://localhost/*"
