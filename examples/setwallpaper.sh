@@ -26,7 +26,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
       "
     ;;
   ubuntu | gnome)
-    gsettings set org.gnome.desktop.background pickture-uri file://"$IMG"
+    gsettings set org.gnome.desktop.background picture-uri file://"$IMG"
     gsettings set org.gnome.desktop.background picture-uri-dark file://"$IMG"
     ;;
   hyprland)
