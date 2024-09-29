@@ -16,7 +16,20 @@ fi
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   # edit the following command to set the wallpaper using your program of choice
+
+  # Wayland
   swww img $IMG
+
+  #X11
+  feh --bg-fill "$IMG"
+
+  # Gnome / Ubuntu
+  gsettings set org.gnome.desktop.background picture-uri file://"$IMG"
+  gsettings set org.gnome.desktop.background picture-uri-dark file://"$IMG"
+
+  # Plasma
+  #
+
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   osascript -e "tell application \"Finder\" to set desktop picture to POSIX file \"$IMG\""
 fi
