@@ -15,21 +15,30 @@ if ! [[ $EXT =~ ^(jpg|jpeg|png)$ ]]; then
 fi
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  # edit the following command to set the wallpaper using your program of choice
+  # the following are some examples of setting wallpaper on various WMs
 
   # Wayland
   swww img $IMG
 
-  #X11
-  feh --bg-fill "$IMG"
+  ## X11
+  #feh --bg-fill "$IMG"
 
-  # Gnome / Ubuntu
-  gsettings set org.gnome.desktop.background picture-uri file://"$IMG"
-  gsettings set org.gnome.desktop.background picture-uri-dark file://"$IMG"
+  ## Gnome / Ubuntu
+  #gsettings set org.gnome.desktop.background picture-uri file://"$IMG"
+  #gsettings set org.gnome.desktop.background picture-uri-dark file://"$IMG"
 
-  # Plasma
-  #
+  ## Plasma
+  # dbus-send --session --dest=org.kde.plasmashell --type=method_call /PlasmaShell org.kde.PlasmaShell.evaluateScript string:"
+  # var allDesktops = desktops();
+  # for (i = 0; i < allDesktops.length; i++) {
+  #     d = allDesktops[i];
+  #     d.wallpaperPlugin = 'org.kde.image';
+  #     d.currentConfigGroup = Array('Wallpaper', 'org.kde.image', 'General');
+  #     d.writeConfig('Image', 'file://$IMG');
+  # }
+  # "
 
 elif [[ "$OSTYPE" == "darwin"* ]]; then
+  # Change wallpaper in OSX.
   osascript -e "tell application \"Finder\" to set desktop picture to POSIX file \"$IMG\""
 fi
