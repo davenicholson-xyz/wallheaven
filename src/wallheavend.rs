@@ -7,6 +7,8 @@ use axum::{
     routing::get,
     Router,
 };
+
+#[cfg(target_family = "unix")]
 use daemonize::Daemonize;
 use serde_json::{json, Value};
 use std::fs::File;
@@ -31,17 +33,20 @@ fn main() {
                 .allow_methods(Method::GET),
         );
 
-    let stdout = File::create("/tmp/daemon.out").unwrap();
-    let stderr = File::create("/tmp/daemon.err").unwrap();
+    #[cfg(target_family = "unix")]
+    {
+        let stdout = File::create("/tmp/daemon.out").unwrap();
+        let stderr = File::create("/tmp/daemon.err").unwrap();
 
-    let daemonize = Daemonize::new()
-        .pid_file("/tmp/test.pid")
-        .stdout(stdout)
-        .stderr(stderr);
+        let daemonize = Daemonize::new()
+            .pid_file("/tmp/test.pid")
+            .stdout(stdout)
+            .stderr(stderr);
 
-    match daemonize.start() {
-        Ok(_) => println!("Successfully daemonized"),
-        Err(e) => eprintln!("Error: {}", e),
+        match daemonize.start() {
+            Ok(_) => println!("Successfully daemonized"),
+            Err(e) => eprintln!("Error: {}", e),
+        }
     }
 
     let runtime = Runtime::new().unwrap();
