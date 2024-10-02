@@ -124,3 +124,5 @@ You can also just pipe the output directly into a script.
 
 An example script to set the wallpaper on both Linux and Mac can be found [here](/examples/setwallpaper.sh)
 
+A script to set the wallpaper via the terminal can be found in the [examples folder](/examples)
+
