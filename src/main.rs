@@ -7,6 +7,11 @@ mod structs;
 mod utils;
 mod wallhaven;
 
+#[cfg(target_family = "unix")]
+mod unix;
+#[cfg(target_family = "windows")]
+mod windows;
+
 use anyhow::Result;
 use enums::Sorting;
 use std::fs;

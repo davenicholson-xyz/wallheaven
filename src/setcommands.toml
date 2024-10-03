@@ -4,6 +4,10 @@ command = "dbus-send --session --dest=org.kde.plasmashell --type=method_call /Pl
 [linux.gnome]
 command = "gsettings set org.gnome.desktop.background picture-uri file://{IMG} && gsettings set org.gnome.desktop.background picture-uri-dark file://{IMG}"
 
+[linux.i3]
+command = "feh --bg-fill {IMG}"
+
 [macos]
 command = "osascript -e \"tell application 'Finder' to set desktop picture to POSIX file '{IMG}'\""
+
 

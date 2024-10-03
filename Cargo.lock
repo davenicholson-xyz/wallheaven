@@ -2021,6 +2021,7 @@ dependencies = [
  "shlex",
  "sysinfo",
  "tokio",
+ "toml",
  "tower-http",
  "url",
 ]

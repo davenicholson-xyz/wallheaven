@@ -1,4 +1,7 @@
-use crate::config;
+#[cfg(target_family = "windows")]
+use crate::windows;
+
+use crate::{config, unix};
 use std::fs::{self, File};
 use std::io::{self, copy, BufRead, LineWriter, Write};
 use std::path::Path;
@@ -152,22 +155,25 @@ pub fn set_wallpaper(image_url: &str, output: bool) -> Result<()> {
         return Ok(());
     }
 
-    println!("Setting the wallpaper");
-    Ok(())
-    //let post_script = config.get_string("post_script");
-    //if post_script.is_ok() {
-    //    let parsed_command =
-    //        shlex::split(&post_script.unwrap()).expect("Failed to parse external script");
-    //    if let Some((command, args)) = parsed_command.split_first() {
-    //        let _status = Command::new(command)
-    //            .args(args)
-    //            .arg(fname.display().to_string())
-    //            .status()
-    //            .expect("Failed to execute external script");
-    //    };
-    //    Ok(())
-    //} else {
-    //    println!("{}", fname.display().to_string());
-    //    Ok(())
-    //}
+    let post_script = config.get_string("post_script");
+    if post_script.is_ok() {
+        let parsed_command =
+            shlex::split(&post_script.unwrap()).expect("Failed to parse external script");
+        if let Some((command, args)) = parsed_command.split_first() {
+            let _status = Command::new(command)
+                .args(args)
+                .arg(fname.display().to_string())
+                .status()
+                .expect("Failed to execute external script");
+        };
+        Ok(())
+    } else {
+        #[cfg(target_family = "windows")]
+        windows::set_wallpaper(&fname.display().to_string())?;
+
+        #[cfg(target_family = "unix")]
+        unix::set_wallpaper(&fname.display().to_string())?;
+
+        Ok(())
+    }
 }
