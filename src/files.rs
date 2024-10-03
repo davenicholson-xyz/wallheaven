@@ -1,10 +1,3 @@
-// #[cfg(target_family = "windows")]
-// use crate::windows;
-
-// #[cfg(target_family = "unix")]
-// use crate::unix;
-
-use wallpaper;
 use crate::config;
 use std::fs::{self, File};
 use std::io::{self, copy, BufRead, LineWriter, Write};
@@ -12,6 +5,7 @@ use std::path::Path;
 use std::process::Command;
 use std::{env, path::PathBuf};
 use url::Url;
+use wallpaper;
 
 use anyhow::Result;
 
@@ -176,12 +170,6 @@ pub fn set_wallpaper(image_url: &str, output: bool) -> Result<()> {
         if setwp.is_err() {
             println!("{}", fname.display().to_string());
         }
-        // #[cfg(target_family = "windows")]
-        // windows::set_wallpaper(&fname.display().to_string())?;
-
-        // #[cfg(target_family = "unix")]
-        // unix::set_wallpaper(&fname.display().to_string())?;
-
         Ok(())
     }
 }
