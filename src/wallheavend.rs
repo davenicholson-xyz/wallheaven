@@ -35,20 +35,7 @@ fn main() {
         );
 
     #[cfg(target_family = "unix")]
-    {
-        let stdout = File::create("/tmp/daemon.out").unwrap();
-        let stderr = File::create("/tmp/daemon.err").unwrap();
-
-        let daemonize = Daemonize::new()
-            .pid_file("/tmp/test.pid")
-            .stdout(stdout)
-            .stderr(stderr);
-
-        match daemonize.start() {
-            Ok(_) => println!("Successfully daemonized"),
-            Err(e) => eprintln!("Error: {}", e),
-        }
-    }
+    daemonize_unix();
 
     let runtime = Runtime::new().unwrap();
 
@@ -101,4 +88,19 @@ async fn shutdown_signal() {
     signal::ctrl_c()
         .await
         .expect("failed to install CTRL+C signal handler");
+}
+
+fn daemonize_unix() {
+    let stdout = File::create("/tmp/daemon.out").unwrap();
+    let stderr = File::create("/tmp/daemon.err").unwrap();
+
+    let daemonize = Daemonize::new()
+        .pid_file("/tmp/test.pid")
+        .stdout(stdout)
+        .stderr(stderr);
+
+    match daemonize.start() {
+        Ok(_) => println!("Successfully daemonized"),
+        Err(e) => eprintln!("Error: {}", e),
+    }
 }
