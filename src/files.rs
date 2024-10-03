@@ -129,7 +129,7 @@ pub fn get_wpid(image_url: &str) -> String {
     return wpid[1].to_string();
 }
 
-pub fn set_wallpaper(image_url: &str) -> Result<()> {
+pub fn set_wallpaper(image_url: &str, output: bool) -> Result<()> {
     let config = config::CONFIG.lock().unwrap();
 
     let filename = filename_from_url(image_url);
@@ -147,20 +147,27 @@ pub fn set_wallpaper(image_url: &str) -> Result<()> {
     let wpid = get_wpid(image_url);
     writeln!(current, "https://wallhaven.cc/w/{}", wpid)?;
 
-    let post_script = config.get_string("post_script");
-    if post_script.is_ok() {
-        let parsed_command =
-            shlex::split(&post_script.unwrap()).expect("Failed to parse external script");
-        if let Some((command, args)) = parsed_command.split_first() {
-            let _status = Command::new(command)
-                .args(args)
-                .arg(fname.display().to_string())
-                .status()
-                .expect("Failed to execute external script");
-        };
-        Ok(())
-    } else {
+    if output {
         println!("{}", fname.display().to_string());
-        Ok(())
+        return Ok(());
     }
+
+    println!("Setting the wallpaper");
+    Ok(())
+    //let post_script = config.get_string("post_script");
+    //if post_script.is_ok() {
+    //    let parsed_command =
+    //        shlex::split(&post_script.unwrap()).expect("Failed to parse external script");
+    //    if let Some((command, args)) = parsed_command.split_first() {
+    //        let _status = Command::new(command)
+    //            .args(args)
+    //            .arg(fname.display().to_string())
+    //            .status()
+    //            .expect("Failed to execute external script");
+    //    };
+    //    Ok(())
+    //} else {
+    //    println!("{}", fname.display().to_string());
+    //    Ok(())
+    //}
 }

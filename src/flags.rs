@@ -75,6 +75,10 @@ pub struct Flags {
     /// Deletes wallpaper cache folder
     #[arg(short, long)]
     pub delete: bool,
+
+    /// Output filepath bypassing post_script
+    #[arg(short, long)]
+    pub output: bool,
 }
 
 pub fn cli_args() -> Flags {

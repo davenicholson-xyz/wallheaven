@@ -14,37 +14,39 @@ use std::fs;
 fn main() -> Result<()> {
     let flags = flags::cli_args();
 
+    let output = flags.output;
+
     if flags.collection.is_some() {
         let wallpapers = wallhaven::collection(&flags.collection.unwrap())?;
         let chosen = utils::random_vec(&wallpapers);
-        files::set_wallpaper(&chosen)?;
+        files::set_wallpaper(&chosen, output)?;
         return Ok(());
     }
 
     if flags.random.is_some() {
         let wallpapers = wallhaven::query(Sorting::Random)?;
         let chosen = utils::random_vec(&wallpapers);
-        files::set_wallpaper(&chosen)?;
+        files::set_wallpaper(&chosen, output)?;
         return Ok(());
     }
 
     if flags.toplist {
         let wallpapers = wallhaven::query(Sorting::Toplist)?;
         let chosen = utils::random_vec(&wallpapers);
-        files::set_wallpaper(&chosen)?;
+        files::set_wallpaper(&chosen, output)?;
         return Ok(());
     }
 
     if flags.hot {
         let wallpapers = wallhaven::query(Sorting::Hot)?;
         let chosen = utils::random_vec(&wallpapers);
-        files::set_wallpaper(&chosen)?;
+        files::set_wallpaper(&chosen, output)?;
         return Ok(());
     }
 
     if flags.id.is_some() {
         let wallpaper = wallhaven::by_id(&flags.id.unwrap())?;
-        files::set_wallpaper(&wallpaper)?;
+        files::set_wallpaper(&wallpaper, output)?;
         return Ok(());
     }
 
