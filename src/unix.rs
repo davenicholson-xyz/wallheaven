@@ -27,26 +27,30 @@ pub fn set_wallpaper(filepath: &str) -> Result<()> {
         let desktop_session = env::var("DESKTOP_SESSION").unwrap_or_default();
         if let Some(config_command) = config.linux.get(&desktop_session) {
             let cmd_string = config_command.command.replace("{IMG}", filepath);
-            std::process::Command::new("sh")
+            let status = std::process::Command::new("sh")
                 .arg("-c")
                 .arg(cmd_string)
                 .status()
                 .expect("Failed to set wallpaper");
-            return Ok(());
+            if !status.success() {
+                println!("{}", filepath);
+            }
         } else {
             println!("{}", filepath);
-            return Ok(());
         }
+        return Ok(());
     } else if os == "macos" {
         let cmd_string = config.macos.command.replace("{IMG}", filepath);
-        std::process::Command::new("sh")
+        let status = std::process::Command::new("sh")
             .arg("-c")
             .arg(cmd_string)
             .status()
             .expect("Failed to set wallpaper");
-        return Ok(());
+        if !status.success() {
+            println!("{}", filepath);
+        }
     } else {
         println!("{}", filepath);
-        return Ok(());
     }
+    return Ok(());
 }
