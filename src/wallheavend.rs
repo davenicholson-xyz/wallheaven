@@ -14,14 +14,18 @@ use axum::{
 #[cfg(target_family = "unix")]
 use daemonize::Daemonize;
 
+#[cfg(target_family = "windows")]
+use {std::env, std::process::Stdio};
+
 use serde_json::{json, Value};
-use std::process::{Command, Stdio};
-use std::env;
+use std::process::Command;
 use tokio::{runtime::Runtime, signal};
 use tower_http::cors::CorsLayer;
 
 fn main() {
+    #[cfg(target_family = "windows")]
     let args: Vec<String> = env::args().collect();
+    #[cfg(target_family = "windows")]
     let is_daemon = args.contains(&"--daemon".to_string());
 
     let output = Command::new("wallheaven").arg("-h").output();
@@ -102,14 +106,13 @@ async fn shutdown_signal() {
         .expect("failed to install CTRL+C signal handler");
 }
 
-
 #[cfg(target_family = "unix")]
 fn daemonize_unix() {
-    let stdout = File::create("/tmp/daemon.out").unwrap();
-    let stderr = File::create("/tmp/daemon.err").unwrap();
+    let stdout = File::create("/tmp/wallheavend.out").unwrap();
+    let stderr = File::create("/tmp/wallheavend.err").unwrap();
 
     let daemonize = Daemonize::new()
-        .pid_file("/tmp/test.pid")
+        .pid_file("/tmp/wallheavend.pid")
         .stdout(stdout)
         .stderr(stderr);
 
@@ -119,17 +122,17 @@ fn daemonize_unix() {
     }
 }
 
+#[cfg(target_family = "windows")]
 fn daemonize_windows() {
     use std::os::windows::process::CommandExt;
     const DETACHED_PROCESS: u32 = 0x00000008;
     const CREATE_NO_WINDOW: u32 = 0x08000000;
 
-    // Spawn a new process and pass the --daemon argument to signal it's the daemonized instance
     let result = Command::new(std::env::current_exe().unwrap())
-        .arg("--daemon")  // Pass the argument to indicate it's the daemon process
-        .creation_flags(DETACHED_PROCESS | CREATE_NO_WINDOW) // Detached process, no window
-        .stdout(Stdio::null()) // Detach stdout
-        .stderr(Stdio::null()) // Detach stderr
+        .arg("--daemon")
+        .creation_flags(DETACHED_PROCESS | CREATE_NO_WINDOW)
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
         .spawn();
 
     match result {
@@ -137,5 +140,5 @@ fn daemonize_windows() {
         Err(e) => eprintln!("Failed to daemonize application on Windows: {}", e),
     }
 
-    std::process::exit(0); // Exit the original process
+    std::process::exit(0);
 }
