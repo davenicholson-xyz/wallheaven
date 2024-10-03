@@ -28,10 +28,6 @@ Download and install/build from the [latest release](https://github.com/davenich
 
 ---
 
-### Usage on Windows
-
-Setting the wallpaper on Windows currently requires some scripts to be installed. Save `setwallpaper.ps1` and `setwallpaper.bat` from [here](/examples) somewhere on your computer that is in your [system PATH](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/). Then make sure your config file includes `post_script="setwallpaper.bat"`. Now wallheaven and the wallheaven daemon can set the wallpaper directly.
-
 ### Configuration 
 
 Configuration is stored in `$HOME/.config/wallheaven/config.toml` on linux/mac or `%appdata%/Roaming/wallheaven/config.toml` on Windows. Wallheaven's defaults will be overwritten by these options, which in turn will be overwritten by any environment variables set proceeded with `WALLHEAVEN_`. These can then be overridden with any command line flags.
@@ -51,6 +47,12 @@ Call the `wallheaven` command and select an option to retrieve a random wallpape
 `wallheaven -t` to get a random wallpaper from the toplist. Pass a range option to search time range `--range 1w` will search the toplist for the past week.
 
 `wallheaven --hot` will get wallpapers from the hottest wallpapers list.
+
+---
+
+### Usage on Windows
+
+Setting the wallpaper on Windows currently requires some scripts to be installed. Save `setwallpaper.ps1` and `setwallpaper.bat` from [here](/examples) somewhere on your computer that is in your [system PATH](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/). Then make sure your config file includes `post_script="setwallpaper.bat"`. Now wallheaven and the wallheaven daemon can set the wallpaper directly.
 
 ---
 
