@@ -104,3 +104,21 @@ fn daemonize_unix() {
         Err(e) => eprintln!("Error: {}", e),
     }
 }
+
+#[cfg(target_family = "windows")]
+fn daemonize_windows() {
+    use std::os::windows::process::CommandExt;
+    const CREATE_NO_WINDOW: u32 = 0x08000000;
+
+    // Spawn a new process and detach it
+    let result = Command::new("wallheavend.exe")
+        .creation_flags(CREATE_NO_WINDOW) // Prevents the window from being created
+        .stdout(Stdio::null()) // Detach stdout
+        .stderr(Stdio::null()) // Detach stderr
+        .spawn();
+
+    match result {
+        Ok(_) => println!("Application daemonized on Windows"),
+        Err(e) => eprintln!("Failed to daemonize application on Windows: {}", e),
+    }
+}
