@@ -1,5 +1,7 @@
 #[cfg(target_family = "unix")]
 extern crate daemonize;
+#[cfg(target_family = "unix")]
+use std::fs::File;
 
 use axum::{
     extract::Path,
@@ -11,13 +13,17 @@ use axum::{
 
 #[cfg(target_family = "unix")]
 use daemonize::Daemonize;
+
 use serde_json::{json, Value};
-use std::fs::File;
-use std::process::Command;
+use std::process::{Command, Stdio};
+use std::env;
 use tokio::{runtime::Runtime, signal};
 use tower_http::cors::CorsLayer;
 
 fn main() {
+    let args: Vec<String> = env::args().collect();
+    let is_daemon = args.contains(&"--daemon".to_string());
+
     let output = Command::new("wallheaven").arg("-h").output();
     if !output.is_ok() {
         panic!("Wallheaven not found. http://github.com/davenicholson-xyz/wallheaven");
@@ -36,6 +42,12 @@ fn main() {
 
     #[cfg(target_family = "unix")]
     daemonize_unix();
+
+    #[cfg(target_family = "windows")]
+    if !is_daemon {
+        daemonize_windows();
+        return;
+    }
 
     let runtime = Runtime::new().unwrap();
 
@@ -90,6 +102,8 @@ async fn shutdown_signal() {
         .expect("failed to install CTRL+C signal handler");
 }
 
+
+#[cfg(target_family = "unix")]
 fn daemonize_unix() {
     let stdout = File::create("/tmp/daemon.out").unwrap();
     let stderr = File::create("/tmp/daemon.err").unwrap();
@@ -105,20 +119,23 @@ fn daemonize_unix() {
     }
 }
 
-#[cfg(target_family = "windows")]
 fn daemonize_windows() {
     use std::os::windows::process::CommandExt;
+    const DETACHED_PROCESS: u32 = 0x00000008;
     const CREATE_NO_WINDOW: u32 = 0x08000000;
 
-    // Spawn a new process and detach it
-    let result = Command::new("wallheavend.exe")
-        .creation_flags(CREATE_NO_WINDOW) // Prevents the window from being created
+    // Spawn a new process and pass the --daemon argument to signal it's the daemonized instance
+    let result = Command::new(std::env::current_exe().unwrap())
+        .arg("--daemon")  // Pass the argument to indicate it's the daemon process
+        .creation_flags(DETACHED_PROCESS | CREATE_NO_WINDOW) // Detached process, no window
         .stdout(Stdio::null()) // Detach stdout
         .stderr(Stdio::null()) // Detach stderr
         .spawn();
 
     match result {
-        Ok(_) => println!("Application daemonized on Windows"),
+        Ok(_) => println!("Application successfully daemonized on Windows"),
         Err(e) => eprintln!("Failed to daemonize application on Windows: {}", e),
     }
+
+    std::process::exit(0); // Exit the original process
 }
