@@ -6,7 +6,7 @@ All queries and selected wallpapers are cached to cut down on API calls.
 
 ### New Chrome extension for wallhaven.cc
 
-You can now select a wallpaper straight from the wallhaven.cc website using the chrome extension on the [chrome web store](https://chromewebstore.google.com/detail/wallheaven/iokjhndjbphfgllcgkbpmcoojiceegap). Run the `wallheavend` daemon and a new button will appear on the wallpaper thumbnails and an extra button on the wallpaper info page.
+You can now select a wallpaper straight from the wallhaven.cc website using the chrome extension on the [chrome web store](https://chromewebstore.google.com/detail/wallheaven/iokjhndjbphfgllcgkbpmcoojiceegap). Run the `wallheavend` daemon on Linux/Mac or `wallheavend.exe` on Windows and a new button will appear on the wallpaper thumbnails and an extra button on the wallpaper info page.
 
 ![wallpaper thumbnail link](/assets/thumb_link.png)
 Wallpaper thumbnail link when hovering over thumbnails
@@ -27,6 +27,10 @@ Arch (AUR)
 Download and install/build from the [latest release](https://github.com/davenicholson-xyz/wallheaven/releases)
 
 ---
+
+### Usage on Windows
+
+Setting the wallpaper on Windows currently requires some scripts to be installed. Save `setwallpaper.ps1` and `setwallpaper.bat` from [here](/example) somewhere on your computer that is in your [system PATH](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/). Then make sure your config file includes `post_script="setwallpaper.bat"`. Now wallheaven and the wallheaven daemon can set the wallpaper directly.
 
 ### Configuration 
 
