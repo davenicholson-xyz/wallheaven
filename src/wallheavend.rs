@@ -136,8 +136,8 @@ fn daemonize_windows() {
         .spawn();
 
     match result {
-        Ok(_) => println!("Application successfully daemonized on Windows"),
-        Err(e) => eprintln!("Failed to daemonize application on Windows: {}", e),
+        Ok(_) => println!("Wallheavend running in background"),
+        Err(e) => eprintln!("Failed to daemonize application: {}", e),
     }
 
     std::process::exit(0);
