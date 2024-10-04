@@ -1,6 +1,6 @@
 [package]
 name = "wallheaven"
-version = "1.0.1"
+version = "1.1.0"
 edition = "2021"
 authors=["Dave Nicholson <me@davenicholson.xyz>"]
 homepage = "https://github.com/davenicholson-xyz/wallheaven"
