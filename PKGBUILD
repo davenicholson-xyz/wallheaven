@@ -10,7 +10,6 @@ makedepends=()
 depends=()
 arch=('x86_64')
 source=("https://github.com/davenicholson-xyz/$pkgname/releases/download/v$pkgver/wallheaven-x86_64-unknown-linux-gnu.tar.xz")
-noextract=("$pkgname-x86_64-unknown-linux-gnu.tar.xz")
 sha256sums=("3ca79f8de657643232cc7d3b6ab59d14ec1b146e4060d7c729442a049d6f800d")
 
 build() {
