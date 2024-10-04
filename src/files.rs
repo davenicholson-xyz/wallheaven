@@ -1,7 +1,5 @@
-#[cfg(target_family = "windows")]
-use crate::windows;
-
-use crate::{config, unix};
+use crate::config;
+use crate::unix;
 use std::fs::{self, File};
 use std::io::{self, copy, BufRead, LineWriter, Write};
 use std::path::Path;
@@ -166,7 +164,7 @@ pub fn set_wallpaper(image_url: &str, output: bool) -> Result<()> {
                 .status()
                 .expect("Failed to execute external script");
         };
-        Ok(())
+        return Ok(());
     } else {
         #[cfg(target_family = "windows")]
         windows::set_wallpaper(&fname.display().to_string())?;
@@ -174,6 +172,6 @@ pub fn set_wallpaper(image_url: &str, output: bool) -> Result<()> {
         #[cfg(target_family = "unix")]
         unix::set_wallpaper(&fname.display().to_string())?;
 
-        Ok(())
+        return Ok(());
     }
 }
