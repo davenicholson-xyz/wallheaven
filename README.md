@@ -1,6 +1,6 @@
-## 🌆 Wallheaven - Random wallpaper fetcher for wallhaven.cc
+## 🌆 Wallheaven - Random wallpaper fetcher and setter for wallhaven.cc
 
-Wallheaven is a CLI tool for fetching random wallpapers from [wallhaven.cc](https://wallhaven.cc/). Wallheaven will randomly choose a wallpaper from various lists including your own collections using your API key. The selected wallpaper will then be downloaded and will output the file path. Alternatively if a script is provided then the script will be called with the file path. [more info](https://github.com/davenicholson-xyz/wallheaven/tree/main?tab=readme-ov-file#setting-wallpaper-with-external-script)
+Wallheaven is a CLI tool for fetching random wallpapers from [wallhaven.cc](https://wallhaven.cc/). Wallheaven will randomly choose a wallpaper from various lists including your own collections using your API key. Wallheaven will set the wallpaper on your desktop on Windows, Mac and many Linux desktop environments. Any unsupported can be manually set by passing a custom script. Feel free to raise an issue or a pull request for any missing environments.
 
 All queries and selected wallpapers are cached to cut down on API calls. 
 
@@ -9,9 +9,11 @@ All queries and selected wallpapers are cached to cut down on API calls.
 You can now select a wallpaper straight from the wallhaven.cc website using the chrome extension on the [chrome web store](https://chromewebstore.google.com/detail/wallheaven/iokjhndjbphfgllcgkbpmcoojiceegap).  Run the `wallheavend` daemon on Linux/Mac or `wallheavend.exe` on Windows and a new button will appear on the wallpaper thumbnails and an extra button on the wallpaper info page.
 
 ![wallpaper thumbnail link](/assets/thumb_link.png)
+
 Wallpaper thumbnail link when hovering over thumbnails
 
 ![wallpaper info link](/assets/page_link.png)
+
 Sidebar link shown on wallpaper info page
 
 --- 
@@ -47,12 +49,6 @@ Call the `wallheaven` command and select an option to retrieve a random wallpape
 `wallheaven -t` to get a random wallpaper from the toplist. Pass a range option to search time range `--range 1w` will search the toplist for the past week.
 
 `wallheaven --hot` will get wallpapers from the hottest wallpapers list.
-
----
-
-### Usage on Windows
-
-Setting the wallpaper on Windows currently requires some scripts to be installed. Save `setwallpaper.ps1` and `setwallpaper.bat` from [here](/examples) somewhere on your computer that is in your [system PATH](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/). Then make sure your config file includes `post_script="setwallpaper.bat"`. Now wallheaven and the wallheaven daemon can set the wallpaper directly.
 
 ---
 
@@ -106,6 +102,9 @@ Returns the current file path of the last wallpaper set with wallhwaven
 #### `-u --url`
 Return the wallhaven.cc link to the last wallpaper set with wallheaven
 
+#### `-o --output`
+Return the wallpaper file path without setting the wallpaper
+
 #### `-l --last`
 Returns the last query made with --random
 
@@ -122,13 +121,11 @@ Version info
 
 ## Setting wallpaper with external script
 
-The wallheaven app only spits out the location of the selected wallpaper on your drive (the cache folder). To set the wallpaper you will need to pass it to whichever program you are using to set wallpaper on your OS. This can either be done by setting the `post_script` option in `config.toml` to the script you wish to set the wallpaper (`post_script="swww img"`) or you can set the `-s --script` flag (`wallheaven -t -s "swww img"`)
+The wallheaven app sets the wallpaper depending on OS and desktop environment used. If yours is currently unsupported or you need a custom script you can set it using the `post_script` option in `config.toml` of via the `-s --script` flag (`wallheaven -t -s "swww img"`)
 
 You can also just pipe the output directly into a script.
 
 `wallheaven -t | swww img` for example. Or if it does not allow piping `feh --bg-fill $(wallhaven -t)`
 
 An example script to set the wallpaper on both Linux and Mac can be found [here](/examples/setwallpaper.sh)
-
-A script to set the wallpaper on Windows via the terminal can be found in the [examples folder](/examples)
 
