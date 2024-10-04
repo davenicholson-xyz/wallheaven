@@ -6,6 +6,12 @@ use std::process::Command;
 use std::{env, path::PathBuf};
 use url::Url;
 
+#[cfg(target_family = "windows")]
+use crate::windows;
+
+#[cfg(target_family = "unix")]
+use crate::unix;
+
 use anyhow::Result;
 
 pub fn config_dir_path() -> PathBuf {
@@ -129,7 +135,7 @@ pub fn get_wpid(image_url: &str) -> String {
     return wpid[1].to_string();
 }
 
-pub fn set_wallpaper(image_url: &str) -> Result<()> {
+pub fn set_wallpaper(image_url: &str, output: bool) -> Result<()> {
     let config = config::CONFIG.lock().unwrap();
 
     let filename = filename_from_url(image_url);
@@ -147,6 +153,11 @@ pub fn set_wallpaper(image_url: &str) -> Result<()> {
     let wpid = get_wpid(image_url);
     writeln!(current, "https://wallhaven.cc/w/{}", wpid)?;
 
+    if output {
+        println!("{}", fname.display().to_string());
+        return Ok(());
+    }
+
     let post_script = config.get_string("post_script");
     if post_script.is_ok() {
         let parsed_command =
@@ -158,9 +169,14 @@ pub fn set_wallpaper(image_url: &str) -> Result<()> {
                 .status()
                 .expect("Failed to execute external script");
         };
-        Ok(())
+        return Ok(());
     } else {
-        println!("{}", fname.display().to_string());
-        Ok(())
+        #[cfg(target_family = "windows")]
+        windows::set_wallpaper(&fname.display().to_string())?;
+
+        #[cfg(target_family = "unix")]
+        unix::set_wallpaper(&fname.display().to_string())?;
+
+        return Ok(());
     }
 }
