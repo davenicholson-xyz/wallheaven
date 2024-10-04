@@ -1,6 +1,20 @@
 ## 🌆 Wallheaven - Random wallpaper fetcher and setter for wallhaven.cc
 
-Wallheaven is a CLI tool for fetching random wallpapers from [wallhaven.cc](https://wallhaven.cc/). Wallheaven will randomly choose a wallpaper from various lists including your own collections using your API key. Wallheaven will set the wallpaper on your desktop on Windows, Mac and many Linux desktop environments. Any unsupported can be manually set by passing a custom script. Feel free to raise an issue or a pull request for any missing environments.
+Wallheaven is a CLI tool for fetching random wallpapers from [wallhaven.cc](https://wallhaven.cc/). Wallheaven will randomly choose a wallpaper from various lists including your own collections using your API key. Wallheaven will set the wallpaper on your desktop on Windows, Mac and many Linux desktop environments. 
+### Supported desktop environments
+
+- Windows
+- MacOS
+- Linux
+  - Gnome
+  - Ubuntu
+  - KDE Plasma
+  - XFCE
+  - Cinnamon
+  - MATE
+  - Budgie
+
+Any unsupported can be manually set by passing a custom script. Feel free to raise an issue or a pull request for any missing environments.
 
 All queries and selected wallpapers are cached to cut down on API calls. 
 
