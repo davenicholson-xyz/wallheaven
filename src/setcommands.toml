@@ -4,6 +4,9 @@ command = "dbus-send --session --dest=org.kde.plasmashell --type=method_call /Pl
 [linux.gnome]
 command = "gsettings set org.gnome.desktop.background picture-uri file://{IMG} && gsettings set org.gnome.desktop.background picture-uri-dark file://{IMG}"
 
+[linux.gnome-wayland]
+command = "gsettings set org.gnome.desktop.background picture-uri file://{IMG} && gsettings set org.gnome.desktop.background picture-uri-dark file://{IMG}"
+
 [linux.ubuntu]
 command = "gsettings set org.gnome.desktop.background picture-uri file://{IMG} && gsettings set org.gnome.desktop.background picture-uri-dark file://{IMG}"
 
