@@ -1,11 +1,16 @@
 use crate::config;
-use crate::unix;
 use std::fs::{self, File};
 use std::io::{self, copy, BufRead, LineWriter, Write};
 use std::path::Path;
 use std::process::Command;
 use std::{env, path::PathBuf};
 use url::Url;
+
+#[cfg(target_family = "windows")]
+use crate::windows;
+
+#[cfg(target_family = "unix")]
+use crate::unix;
 
 use anyhow::Result;
 
