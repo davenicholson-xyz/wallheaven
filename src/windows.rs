@@ -10,11 +10,12 @@ use winapi::um::winuser::SPI_SETDESKWALLPAPER;
 use winreg::enums::*;
 use winreg::RegKey;
 
+// completely stolen from https://github.com/reujab/wallpaper.rs/blob/master/src/windows.rs
 pub fn set_wallpaper(filepath: &str) -> Result<()> {
     let hkcu = RegKey::predef(HKEY_CURRENT_USER);
     let (desktop, _) = hkcu.create_subkey(r"Control Panel\Desktop")?;
 
-    desktop.set_value( "WallpaperStyle", &"6".to_string(), )?;
+    desktop.set_value("WallpaperStyle", &"6".to_string())?;
 
     unsafe {
         let path = OsStr::new(filepath)
