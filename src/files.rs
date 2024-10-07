@@ -6,12 +6,6 @@ use std::process::Command;
 use std::{env, path::PathBuf};
 use url::Url;
 
-#[cfg(target_family = "windows")]
-use crate::windows;
-
-#[cfg(target_family = "unix")]
-use crate::unix;
-
 use anyhow::Result;
 
 pub fn config_dir_path() -> PathBuf {
@@ -171,12 +165,7 @@ pub fn set_wallpaper(image_url: &str, output: bool) -> Result<()> {
         };
         return Ok(());
     } else {
-        #[cfg(target_family = "windows")]
-        windows::set_wallpaper(&fname.display().to_string())?;
-
-        #[cfg(target_family = "unix")]
-        unix::set_wallpaper(&fname.display().to_string())?;
-
+        setwallpaper::from_file(&fname.display().to_string())?;
         return Ok(());
     }
 }
