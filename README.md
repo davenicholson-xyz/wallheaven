@@ -35,6 +35,7 @@ Sidebar link shown on wallpaper info page
 ### Installation
 
 Cargo
+
 `cargo install wallheaven`
 
 ---
