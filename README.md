@@ -37,14 +37,6 @@ Sidebar link shown on wallpaper info page
 Cargo
 `cargo install wallheaven`
 
-Arch (AUR) 
-`yay -S wallheaven`
-
-Homebrew
-`brew install davenicholson-xyz/tap/wallheaven`
-
-Download and install/build from the [latest release](https://github.com/davenicholson-xyz/wallheaven/releases)
-
 ---
 
 ### Configuration 
